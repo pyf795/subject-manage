@@ -9,10 +9,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 @EnableCaching
 @EnableScheduling
-public class OurmovieprjApplication {
+public class OurprjApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run( OurmovieprjApplication.class, args );
+        SpringApplication.run( OurprjApplication.class, args );
     }
 
 }
