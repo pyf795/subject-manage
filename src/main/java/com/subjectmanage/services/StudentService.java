@@ -1,4 +1,9 @@
 package com.subjectmanage.services;
 
-public class StudentService {
+import com.subjectmanage.beans.Student;
+
+import java.util.List;
+
+public interface StudentService {
+    public List<Student> getStudentListByGroup(int group_id);
 }

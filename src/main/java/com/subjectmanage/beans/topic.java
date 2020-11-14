@@ -1,5 +1,7 @@
 package com.subjectmanage.beans;
 
+import java.util.List;
+
 public class topic {
     private int topic_id;
     private int teacher_id;
@@ -7,6 +9,7 @@ public class topic {
     private String release_time;
     private String topic_url;
     private String type;
+    private List<group> groupList;
 
     public int getTopic_id() {
         return topic_id;
@@ -56,6 +59,15 @@ public class topic {
         this.type = type;
     }
 
+
+    public List<group> getGroupList() {
+        return groupList;
+    }
+
+    public void setGroupList(List<group> groupList) {
+        this.groupList = groupList;
+    }
+
     @Override
     public String toString() {
         return "topic{" +
@@ -65,6 +77,7 @@ public class topic {
                 ", release_time='" + release_time + '\'' +
                 ", topic_url='" + topic_url + '\'' +
                 ", type='" + type + '\'' +
+                ", groupList=" + groupList +
                 '}';
     }
 }

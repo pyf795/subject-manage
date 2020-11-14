@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace=绑定一个对应的Dao/Mapper接口-->
+<mapper namespace="com.subjectmanage.mapper.GroupMapper">
+
+    <!--查询小组中的所有成员-->
+    <select id="getGroupListByTopicId" parameterType="int" resultMap="GroupWithStudents">
+        select * from `group` WHERE topic_id = #{topic_id}
+    </select>
+
+    <resultMap id="GroupWithStudents" type="com.subjectmanage.beans.group">
+        <collection property="studentList" javaType="ArrayList" ofType="com.subjectmanage.beans.Student" select="com.subjectmanage.mapper.StudentMapper.getStudentListByGroup" column="group_id"/>
+    </resultMap>
+
+</mapper>
