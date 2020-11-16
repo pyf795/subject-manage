@@ -10,4 +10,7 @@
         select * from student WHERE group_id = #{group_id}
     </select>
 
+    <select id="selectLoginStudent"  resultType="com.subjectmanage.beans.Student">
+        select * from student WHERE student_num = #{student_num} and password = #{password}
+    </select>
 </mapper>

@@ -10,9 +10,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
-@EnableCaching(proxyTargetClass = true)
+@EnableCaching()
 @EnableScheduling()
-@EnableAspectJAutoProxy(proxyTargetClass = true)
 public class OurprjApplication {
 
     public static void main(String[] args) {

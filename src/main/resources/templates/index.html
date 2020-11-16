@@ -10,6 +10,7 @@
 <body>
 <h1>hello</h1>
 <table >
+    <span >[[${msg}]]</span>
     <tr th:each="group, State : ${session.groupList}">
         <td th:text="${group.group_id}"></td>
         <td th:text="${group.studentList}"></td>
