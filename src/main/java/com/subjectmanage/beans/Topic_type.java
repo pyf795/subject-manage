@@ -1,6 +1,6 @@
 package com.subjectmanage.beans;
 
-public class topic_type {
+public class Topic_type {
     private int topic_type_id;
     private String topic_type_name;
 
@@ -22,7 +22,7 @@ public class topic_type {
 
     @Override
     public String toString() {
-        return "topic_type{" +
+        return "Topic_type{" +
                 "topic_type_id=" + topic_type_id +
                 ", topic_type_name='" + topic_type_name + '\'' +
                 '}';

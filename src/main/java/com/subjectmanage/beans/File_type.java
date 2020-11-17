@@ -1,6 +1,6 @@
 package com.subjectmanage.beans;
 
-public class file_type {
+public class File_type {
     private int type_id;
     private String type_name;
 
@@ -22,7 +22,7 @@ public class file_type {
 
     @Override
     public String toString() {
-        return "file_type{" +
+        return "File_type{" +
                 "type_id=" + type_id +
                 ", type_name='" + type_name + '\'' +
                 '}';

@@ -2,7 +2,7 @@ package com.subjectmanage.beans;
 
 import java.util.List;
 
-public class group {
+public class Group {
     private int group_id;
     private int topic_id;
     private int current_numbers;
@@ -53,7 +53,7 @@ public class group {
 
     @Override
     public String toString() {
-        return "group{" +
+        return "Group{" +
                 "group_id=" + group_id +
                 ", topic_id=" + topic_id +
                 ", current_numbers=" + current_numbers +

@@ -1,10 +1,11 @@
 package com.subjectmanage.services;
 
-import com.subjectmanage.beans.topic;
+import com.subjectmanage.beans.Topic;
 import com.subjectmanage.mapper.TopicMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 public class TopicServiceImpl implements TopicService {
@@ -12,7 +13,27 @@ public class TopicServiceImpl implements TopicService {
     private TopicMapper topicMapper;
 
     @Override
-    public topic getTopicWithGroupById(int topic_id) {
+    public Topic getTopicWithGroupById(int topic_id) {
         return topicMapper.getTopicWithGroupById(topic_id);
+    }
+
+    @Override
+    public List<Topic> selectAll(int startIndex, int pageSize) {
+        return topicMapper.selectAll(startIndex, pageSize);
+    }
+
+    @Override
+    public int addTopic(Topic topic) {
+        return topicMapper.addTopic(topic);
+    }
+
+    @Override
+    public int updateTopic(Topic topic) {
+        return topicMapper.updateTopic(topic);
+    }
+
+    @Override
+    public int deleteTopic(int topic_id) {
+        return topicMapper.deleteTopic(topic_id);
     }
 }

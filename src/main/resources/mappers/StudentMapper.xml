@@ -13,4 +13,49 @@
     <select id="selectLoginStudent"  resultType="com.subjectmanage.beans.Student">
         select * from student WHERE student_num = #{student_num} and password = #{password}
     </select>
+
+    <select id="selectAll"  resultType="com.subjectmanage.beans.Student">
+        select * from student limit #{startIndex},#{pageSize}
+    </select>
+
+    <insert id="addStudent" >
+        insert into student(student_name, student_gender, student_phone, password, student_grade, student_num)
+        value (#{student_name},#{student_gender},#{student_phone},#{password},#{student_grade},#{student_num})
+    </insert>
+
+    <update id="updateStudent" >
+        update student
+          <set>
+              <where>
+                  <if test="student_name!=null">
+                      student_name = #{student_name},
+                  </if>
+                  <if test="student_phone!=null">
+                      student_phone = #{student_phone},
+                  </if>
+                  <if test="student_gender!=null">
+                      student_gender = #{student_gender},
+                  </if>
+                  <if test="student_grade!=null">
+                      student_grade = #{student_grade},
+                  </if>
+                  <if test="group_id!=null">
+                      group_id = #{group_id},
+                  </if>
+                  <if test="student_num!=null">
+                      student_num = #{student_num},
+                  </if>
+                  <if test="password!=null">
+                      password = #{password}
+                  </if>
+              </where>
+          </set>
+        where student_id = #{student_id}
+    </update>
+
+    <delete id="deleteStudent">
+        delete from student where student_id = #{student_id}
+    </delete>
+
+
 </mapper>

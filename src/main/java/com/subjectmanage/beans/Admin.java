@@ -1,6 +1,6 @@
 package com.subjectmanage.beans;
 
-public class admin {
+public class Admin {
     private int admin_id;
     private String admin_name;
     private String admin_num;
@@ -41,7 +41,7 @@ public class admin {
 
     @Override
     public String toString() {
-        return "admin{" +
+        return "Admin{" +
                 "admin_id=" + admin_id +
                 ", admin_name='" + admin_name + '\'' +
                 ", admin_num='" + admin_num + '\'' +

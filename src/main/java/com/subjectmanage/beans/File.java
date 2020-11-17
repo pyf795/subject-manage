@@ -1,6 +1,6 @@
 package com.subjectmanage.beans;
 
-public class file {
+public class File {
     private int file_id;
     private int group_id;
     private String headline;
@@ -67,7 +67,7 @@ public class file {
 
     @Override
     public String toString() {
-        return "file{" +
+        return "File{" +
                 "file_id=" + file_id +
                 ", group_id=" + group_id +
                 ", headline='" + headline + '\'' +

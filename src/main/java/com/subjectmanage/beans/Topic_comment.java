@@ -1,6 +1,6 @@
 package com.subjectmanage.beans;
 
-public class topic_comment {
+public class Topic_comment {
     private int topic_id;
     private int student_id;
     private String content;
@@ -41,7 +41,7 @@ public class topic_comment {
 
     @Override
     public String toString() {
-        return "topic_comment{" +
+        return "Topic_comment{" +
                 "topic_id=" + topic_id +
                 ", student_id=" + student_id +
                 ", content='" + content + '\'' +

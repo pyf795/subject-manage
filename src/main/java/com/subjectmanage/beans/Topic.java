@@ -2,14 +2,14 @@ package com.subjectmanage.beans;
 
 import java.util.List;
 
-public class topic {
+public class Topic {
     private int topic_id;
     private int teacher_id;
     private String headline;
     private String release_time;
     private String topic_url;
     private String type;
-    private List<group> groupList;
+    private List<Group> groupList;
 
     public int getTopic_id() {
         return topic_id;
@@ -60,17 +60,17 @@ public class topic {
     }
 
 
-    public List<group> getGroupList() {
+    public List<Group> getGroupList() {
         return groupList;
     }
 
-    public void setGroupList(List<group> groupList) {
+    public void setGroupList(List<Group> groupList) {
         this.groupList = groupList;
     }
 
     @Override
     public String toString() {
-        return "topic{" +
+        return "Topic{" +
                 "topic_id=" + topic_id +
                 ", teacher_id=" + teacher_id +
                 ", headline='" + headline + '\'' +

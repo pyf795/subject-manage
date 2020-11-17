@@ -10,8 +10,39 @@
         select * from `group` WHERE topic_id = #{topic_id}
     </select>
 
-    <resultMap id="GroupWithStudents" type="com.subjectmanage.beans.group">
+    <resultMap id="GroupWithStudents" type="com.subjectmanage.beans.Group">
         <collection property="studentList" javaType="ArrayList" ofType="com.subjectmanage.beans.Student" select="com.subjectmanage.mapper.StudentMapper.getStudentListByGroup" column="group_id"/>
     </resultMap>
+
+    <select id="selectAll"  resultType="com.subjectmanage.beans.Group">
+        select * from `group` limit #{startIndex},#{pageSize}
+    </select>
+
+    <insert id="addGroup" >
+        insert into `group` (group_id, topic_id, current_numbers, volume)
+            value (#{group_id},#{topic_id},#{current_numbers},#{volume})
+    </insert>
+
+    <update id="updateGroup" >
+        update `group`
+        <set>
+            <where>
+                <if test="topic_id!=null">
+                    topic_id = #{topic_id},
+                </if>
+                <if test="current_numbers!=null">
+                    current_numbers = #{current_numbers},
+                </if>
+                <if test="volume!=null">
+                    volume = #{volume}
+                </if>
+            </where>
+        </set>
+        where group_id = #{group_id}
+    </update>
+
+    <delete id="deleteGroup">
+        delete from `group` where group_id = #{group_id}
+    </delete>
 
 </mapper>

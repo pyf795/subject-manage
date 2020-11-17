@@ -10,10 +10,47 @@
         select * from topic WHERE topic_id = #{topic_id}
     </select>
 
-    <resultMap id="TopicWithGroup" type="com.subjectmanage.beans.topic">
-        <collection property="groupList" javaType="ArrayList" ofType="com.subjectmanage.beans.group" select="com.subjectmanage.mapper.GroupMapper.getGroupListByTopicId" column="topic_id"/>
+    <resultMap id="TopicWithGroup" type="com.subjectmanage.beans.Topic">
+        <collection property="groupList" javaType="ArrayList" ofType="com.subjectmanage.beans.Group" select="com.subjectmanage.mapper.GroupMapper.getGroupListByTopicId" column="topic_id"/>
     </resultMap>
 
+    <select id="selectAll"  resultType="com.subjectmanage.beans.Topic">
+        select * from topic limit #{startIndex},#{pageSize}
+    </select>
+
+    <insert id="addTopic" >
+        insert into topic (teacher_id, headline, release_time, topic_url, type)
+            value (#{teacher_id},#{headline},#{release_time},#{topic_url},#{type})
+    </insert>
+
+    <update id="updateTopic" >
+        update topic
+        <set>
+            <where>
+                <if test="teacher_id">
+                    teacher_id = #{teacher_id},
+                </if>
+                <if test="headline!=null">
+                    headline = #{headline},
+                </if>
+                <if test="release_time!=null">
+                    release_time = #{release_time}
+                </if>
+                <if test="topic_url!=null">
+                    topic_url = #{topic_url}
+                </if>
+                <if test="type!=null">
+                    type = #{type}
+                </if>
+
+            </where>
+        </set>
+        where topic_id = #{topic_id}
+    </update>
+
+    <delete id="deleteTopic">
+        delete from topic where topic_id = #{topic_id}
+    </delete>
 
 
 </mapper>

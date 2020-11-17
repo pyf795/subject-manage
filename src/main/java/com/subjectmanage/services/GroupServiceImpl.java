@@ -1,9 +1,7 @@
 package com.subjectmanage.services;
 
-import com.subjectmanage.beans.group;
+import com.subjectmanage.beans.Group;
 import com.subjectmanage.mapper.GroupMapper;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -17,7 +15,27 @@ public class GroupServiceImpl implements GroupService {
     private GroupMapper groupMapper;
 
     @Override
-    public List<group> getGroupListByTopicId(int topic_id) {
+    public List<Group> getGroupListByTopicId(int topic_id) {
         return groupMapper.getGroupListByTopicId(topic_id);
+    }
+
+    @Override
+    public List<Group> selectAll(int startIndex, int pageSize) {
+        return groupMapper.selectAll(startIndex,pageSize);
+    }
+
+    @Override
+    public int addGroup(Group group) {
+        return groupMapper.addGroup(group);
+    }
+
+    @Override
+    public int updateGroup(Group group) {
+        return groupMapper.updateGroup(group);
+    }
+
+    @Override
+    public int deleteGroup(int group_id) {
+        return groupMapper.deleteGroup(group_id);
     }
 }
