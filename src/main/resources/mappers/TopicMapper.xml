@@ -26,7 +26,7 @@
     <update id="updateTopic" >
         update topic
         <set>
-            <where>
+
                 <if test="teacher_id">
                     teacher_id = #{teacher_id},
                 </if>
@@ -43,7 +43,7 @@
                     type = #{type}
                 </if>
 
-            </where>
+
         </set>
         where topic_id = #{topic_id}
     </update>

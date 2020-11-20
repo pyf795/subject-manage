@@ -9,6 +9,7 @@ public class Student {
     private String student_grade;
     private String student_num;
     private int group_id;
+    private String student_email;
 
     public int getStudent_id() {
         return student_id;
@@ -74,6 +75,14 @@ public class Student {
         this.group_id = group_id;
     }
 
+    public String getStudent_email() {
+        return student_email;
+    }
+
+    public void setStudent_email(String student_email) {
+        this.student_email = student_email;
+    }
+
     @Override
     public String toString() {
         return "Student{" +
@@ -85,6 +94,7 @@ public class Student {
                 ", student_grade='" + student_grade + '\'' +
                 ", student_num='" + student_num + '\'' +
                 ", group_id=" + group_id +
+                ", student_email='" + student_email + '\'' +
                 '}';
     }
 }

@@ -9,13 +9,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class MvcConfig implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("index");
+        registry.addViewController("/").setViewName("testindex");
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginHandlerIntercepter())
                 .addPathPatterns("/**")
-                .excludePathPatterns("/login/**","/images/**","/css/**","/js/**","/font/**","/*.js","/lay/**");
+                .excludePathPatterns("/login/**","/images/**","/css/**","/js/**","/font/**","/lib/**","/api/**",
+                        "/page/**","/lay/**");
     }
 }

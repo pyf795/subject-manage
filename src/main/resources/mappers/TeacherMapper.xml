@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace=绑定一个对应的Dao/Mapper接口-->
+<mapper namespace="com.subjectmanage.mapper.TeacherMapper">
+
+
+    <select id="selectLoginTeacher"  resultType="com.subjectmanage.beans.Teacher">
+        select * from teacher WHERE teacher_num = #{teacher_num} and password = #{password}
+    </select>
+
+    <select id="selectAll"  resultType="com.subjectmanage.beans.Teacher">
+        select * from teacher limit #{startIndex},#{pageSize}
+    </select>
+
+    <insert id="addTeacher" >
+        insert into teacher(teacher_name, teacher_num, password, teacher_email, teacher_phone)
+            value (#{teacher_name},#{teacher_num},#{password},#{teacher_email},#{teacher_phone})
+    </insert>
+
+    <update id="updateTeacher" >
+        update teacher
+        <set>
+            <if test="teacher_name!=null">
+                    teacher_name = #{teacher_name},
+            </if>
+            <if test="teacher_num!=null">
+                    teacher_num = #{teacher_num},
+            </if>
+            <if test="password!=null">
+                    password = #{password},
+            </if>
+            <if test="teacher_email!=null">
+                teacher_email = #{teacher_email},
+            </if>
+            <if test="teacher_phone!=null">
+                teacher_phone = #{teacher_phone},
+            </if>
+
+        </set>
+        where teacher_id = #{teacher_id}
+    </update>
+
+    <delete id="deleteTeacher">
+        delete from teacher where teacher_id = #{teacher_id}
+    </delete>
+
+
+</mapper>

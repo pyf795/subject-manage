@@ -9,7 +9,11 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
-    <link rel="stylesheet" th:href="@{css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
+    <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+    <script th:src="@{/lib/jq-module/jquery.particleground.min.js}" charset="utf-8"></script>
+
     <!--[if lt IE 9]>
     <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
     <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
@@ -35,39 +39,44 @@
 <div class="layui-container">
     <div class="admin-login-background">
         <div class="layui-form login-form">
-            <form class="layui-form" th:action="@{/login/userLogin}" method="post" onsubmit="encrypt()">
+            <form id="login" class="layui-form" th:action="@{/login/userLogin}" method="post">
                 <div class="layui-form-item logo-title">
                     <h1>登录</h1>
+                    <h3 style="color: red">[[${msg}]]</h3>
                 </div>
+                <a th:href="@{/index}">已登录？去主页</a>
                 <div class="layui-form-item">
                     <label class="layui-icon layui-icon-username" ></label>
-                    <input type="text" name="student_num" lay-verify="required|account" placeholder="用户名或者邮箱" autocomplete="off" class="layui-input" value="admin">
+                    <input type="text" name="user_num" lay-verify="required|account" placeholder="用户名" autocomplete="off" class="layui-input" >
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-icon layui-icon-password" ></label>
-                    <input type="password" id="password" name="password" lay-verify="required|password" placeholder="密码" autocomplete="off" class="layui-input" value="123456">
+                    <input type="password" id="password" name="password" lay-verify="required|password" placeholder="密码" autocomplete="off" class="layui-input" >
                 </div>
-                <!--<div class="layui-form-item">
+                <div class="layui-form-item">
                     <label class="layui-icon layui-icon-vercode" ></label>
-                    <input type="text" name="captcha" lay-verify="required|captcha" placeholder="图形验证码" autocomplete="off" class="layui-input verification captcha" value="xszg">
+                    <input type="text" name="captcha" lay-verify="required|captcha" placeholder="图形验证码" autocomplete="off" class="layui-input verification captcha" >
                     <div class="captcha-img">
-                        <img id="captchaPic" src="../images/captcha.jpg">
+                        <img id="captchaPic" th:src="@{/login/getCheckNumber}">
                     </div>
-                </div>-->
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">身份</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="user_type" value="学生" title="学生" checked="">
+                        <input type="radio" name="user_type" value="老师" title="老师">
+                    </div>
+                </div>
                 <div class="layui-form-item">
                     <input type="checkbox" name="rememberMe" value="true" lay-skin="primary" title="记住密码">
                 </div>
                 <div class="layui-form-item">
-                    <button class="layui-btn layui-btn layui-btn-normal layui-btn-fluid" lay-submit="" lay-filter="login">登 入</button>
+                    <button class="layui-btn layui-btn layui-btn-normal layui-btn-fluid" lay-submit lay-filter="login">登 入</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-<script src="../lib/jquery-3.4.1/jquery-3.4.1.min.js" charset="utf-8"></script>
-<script src="../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
-<script src="../lib/jq-module/jquery.particleground.min.js" charset="utf-8"></script>
-<script th:src="@{/js/md5.js}"></script>
 <script>
     layui.use(['form'], function () {
         var form = layui.form,
@@ -99,16 +108,9 @@
                 layer.msg('验证码不能为空');
                 return false;
             }
-            layer.msg('登录成功', function () {
-                window.location = '../index.html';
-            });
-            return false;
+            return true;
         });
     });
-    function encrypt() {
-        // 将密码框的值修改为md5加密后的
-        document.getElementById('pass').value = md5(document.getElementById('password').value)
-    }
 </script>
 </body>
 </html>

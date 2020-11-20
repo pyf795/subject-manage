@@ -5,6 +5,8 @@ public class Teacher {
     private String teacher_name;
     private String teacher_num;
     private String password;
+    private String teacher_email;
+    private String teacher_phone;
 
     public int getTeacher_id() {
         return teacher_id;
@@ -38,6 +40,22 @@ public class Teacher {
         this.password = password;
     }
 
+    public String getTeacher_email() {
+        return teacher_email;
+    }
+
+    public void setTeacher_email(String teacher_email) {
+        this.teacher_email = teacher_email;
+    }
+
+    public String getTeacher_phone() {
+        return teacher_phone;
+    }
+
+    public void setTeacher_phone(String teacher_phone) {
+        this.teacher_phone = teacher_phone;
+    }
+
     @Override
     public String toString() {
         return "Teacher{" +
@@ -45,6 +63,8 @@ public class Teacher {
                 ", teacher_name='" + teacher_name + '\'' +
                 ", teacher_num='" + teacher_num + '\'' +
                 ", password='" + password + '\'' +
+                ", teacher_email='" + teacher_email + '\'' +
+                ", teacher_phone='" + teacher_phone + '\'' +
                 '}';
     }
 }

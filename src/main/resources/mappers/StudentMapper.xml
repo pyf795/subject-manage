@@ -19,14 +19,14 @@
     </select>
 
     <insert id="addStudent" >
-        insert into student(student_name, student_gender, student_phone, password, student_grade, student_num)
-        value (#{student_name},#{student_gender},#{student_phone},#{password},#{student_grade},#{student_num})
+        insert into student(student_name, student_gender, student_phone, password, student_grade, student_num,student_email)
+        value (#{student_name},#{student_gender},#{student_phone},#{password},#{student_grade},#{student_num},#{student_email})
     </insert>
 
     <update id="updateStudent" >
         update student
           <set>
-              <where>
+
                   <if test="student_name!=null">
                       student_name = #{student_name},
                   </if>
@@ -48,7 +48,10 @@
                   <if test="password!=null">
                       password = #{password}
                   </if>
-              </where>
+                  <if test="student_email!=null">
+                      student_email = #{student_email}
+                  </if>
+
           </set>
         where student_id = #{student_id}
     </update>
