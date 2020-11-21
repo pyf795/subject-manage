@@ -46,7 +46,7 @@
                       student_num = #{student_num},
                   </if>
                   <if test="password!=null">
-                      password = #{password}
+                      password = #{password},
                   </if>
                   <if test="student_email!=null">
                       student_email = #{student_email}

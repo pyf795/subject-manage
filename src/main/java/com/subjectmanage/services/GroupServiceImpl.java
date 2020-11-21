@@ -15,6 +15,11 @@ public class GroupServiceImpl implements GroupService {
     private GroupMapper groupMapper;
 
     @Override
+    public Group getGroupById(int group_id) {
+        return groupMapper.getGroupById(group_id);
+    }
+
+    @Override
     public List<Group> getGroupListByTopicId(int topic_id) {
         return groupMapper.getGroupListByTopicId(topic_id);
     }

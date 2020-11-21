@@ -11,16 +11,23 @@
     </select>
 
     <resultMap id="TopicWithGroup" type="com.subjectmanage.beans.Topic">
-        <collection property="groupList" javaType="ArrayList" ofType="com.subjectmanage.beans.Group" select="com.subjectmanage.mapper.GroupMapper.getGroupListByTopicId" column="topic_id"/>
+        <result property="topic_id" column="topic_id"/>
+        <result property="teacher_id" column="teacher_id"/>
+        <association property="teacher" column="teacher_id" javaType="com.subjectmanage.beans.Teacher" select="com.subjectmanage.mapper.TeacherMapper.selectTeacher"/>
+        <collection property="groupList" column="topic_id" javaType="ArrayList" ofType="com.subjectmanage.beans.Group" select="com.subjectmanage.mapper.GroupMapper.getGroupListByTopicId" />
     </resultMap>
 
     <select id="selectAll"  resultType="com.subjectmanage.beans.Topic">
         select * from topic limit #{startIndex},#{pageSize}
     </select>
 
+    <select id="getTotal"  resultType="int">
+        select count(*) from topic
+    </select>
+
     <insert id="addTopic" >
-        insert into topic (teacher_id, headline, release_time, topic_url, type)
-            value (#{teacher_id},#{headline},#{release_time},#{topic_url},#{type})
+        insert into topic (teacher_id, headline, release_time, topic_url, type,content,gender)
+            value (#{teacher_id},#{headline},#{release_time},#{topic_url},#{type},#{content},#{gender})
     </insert>
 
     <update id="updateTopic" >
@@ -41,6 +48,12 @@
                 </if>
                 <if test="type!=null">
                     type = #{type}
+                </if>
+                <if test="content!=null">
+                    content = #{content}
+                </if>
+                <if test="gender!=null">
+                    gender = #{gender}
                 </if>
 
 

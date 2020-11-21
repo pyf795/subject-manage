@@ -10,6 +10,33 @@ public class Topic {
     private String topic_url;
     private String type;
     private List<Group> groupList;
+    private Teacher teacher;
+    private String content;
+    private String gender;
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public Teacher getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
+    }
 
     public int getTopic_id() {
         return topic_id;
@@ -68,6 +95,7 @@ public class Topic {
         this.groupList = groupList;
     }
 
+
     @Override
     public String toString() {
         return "Topic{" +
@@ -78,6 +106,9 @@ public class Topic {
                 ", topic_url='" + topic_url + '\'' +
                 ", type='" + type + '\'' +
                 ", groupList=" + groupList +
+                ", teacher=" + teacher +
+                ", content='" + content + '\'' +
+                ", gender='" + gender + '\'' +
                 '}';
     }
 }

@@ -2,6 +2,7 @@ package com.subjectmanage;
 
 import com.subjectmanage.beans.PageElement;
 import com.subjectmanage.beans.Student;
+import com.subjectmanage.beans.Topic;
 import com.subjectmanage.mapper.GroupMapper;
 import com.subjectmanage.mapper.TopicMapper;
 import com.subjectmanage.services.StudentServiceImpl;
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 @SpringBootTest(classes= OurprjApplication.class)
@@ -18,18 +21,17 @@ import java.util.*;
     @Resource
     private StudentServiceImpl studentService;
 
+    @Resource
+    private TopicServiceImpl topicService;
 
     @Test
     void topicTest1() {
-        Student student = new Student();
-        student.setPassword("1234");
-        student.setStudent_gender("男");
-        student.setStudent_grade("2017级");
-        student.setStudent_num("2017221303003");
-        student.setStudent_phone("13922222222");
-        student.setStudent_name("jobs");
-        studentService.addStudent(student);
-
+        Topic topic = topicService.getTopicWithGroupById(1);
+        String url = topic.getTopic_url();
+        Path path = Paths.get("src/main/resources/static/",url);
+        String filename=path.toString();
+        String downFilename=filename.substring(filename.lastIndexOf("\\")+1);
+        System.out.println(downFilename);
     }
 
     @Test
@@ -127,5 +129,10 @@ import java.util.*;
 
         map.put("menuInfo",menuInfo);
         System.out.println(map);
+    }
+
+    @Test
+    void test4(){
+        System.out.println(topicService.getTotal());
     }
 }

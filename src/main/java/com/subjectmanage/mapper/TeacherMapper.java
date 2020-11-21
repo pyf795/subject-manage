@@ -9,9 +9,12 @@ import java.util.List;
 @Mapper
 public interface TeacherMapper {
 
+    public Teacher selectTeacher(int teacher_id);
+
     public Teacher selectLoginTeacher(String teacher_num, String password);
 
     public List<Teacher> selectAll(int startIndex, int pageSize);
+
 
     public int addTeacher(Teacher teacher);
 

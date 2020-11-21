@@ -2,6 +2,7 @@ package com.subjectmanage.services;
 
 import com.subjectmanage.beans.Topic;
 import com.subjectmanage.mapper.TopicMapper;
+import org.apache.ibatis.annotations.One;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -20,6 +21,11 @@ public class TopicServiceImpl implements TopicService {
     @Override
     public List<Topic> selectAll(int startIndex, int pageSize) {
         return topicMapper.selectAll(startIndex, pageSize);
+    }
+
+    @Override
+    public int getTotal(){
+        return topicMapper.getTotal();
     }
 
     @Override

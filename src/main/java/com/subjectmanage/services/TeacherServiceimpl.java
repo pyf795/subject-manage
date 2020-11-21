@@ -16,6 +16,11 @@ public class TeacherServiceimpl implements TeacherService {
 
 
     @Override
+    public Teacher selectTeacher(int teacher_id) {
+        return teacherMapper.selectTeacher(teacher_id);
+    }
+
+    @Override
     public Teacher selectLoginTeacher(String teacher_num, String password) {
         return teacherMapper.selectLoginTeacher(teacher_num,password);
     }

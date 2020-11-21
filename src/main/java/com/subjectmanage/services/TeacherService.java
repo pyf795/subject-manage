@@ -5,6 +5,9 @@ import com.subjectmanage.beans.Teacher;
 import java.util.List;
 
 public interface TeacherService {
+
+    public Teacher selectTeacher(int teacher_id);
+
     public Teacher selectLoginTeacher(String teacher_num, String password);
 
     public List<Teacher> selectAll(int startIndex, int pageSize);

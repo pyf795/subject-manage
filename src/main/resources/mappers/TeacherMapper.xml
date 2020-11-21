@@ -5,6 +5,9 @@
 <!--namespace=绑定一个对应的Dao/Mapper接口-->
 <mapper namespace="com.subjectmanage.mapper.TeacherMapper">
 
+    <select id="selectTeacher" resultType="com.subjectmanage.beans.Teacher">
+        select * from teacher WHERE teacher_id = #{teacher_id}
+    </select>
 
     <select id="selectLoginTeacher"  resultType="com.subjectmanage.beans.Teacher">
         select * from teacher WHERE teacher_num = #{teacher_num} and password = #{password}
@@ -13,6 +16,7 @@
     <select id="selectAll"  resultType="com.subjectmanage.beans.Teacher">
         select * from teacher limit #{startIndex},#{pageSize}
     </select>
+
 
     <insert id="addTeacher" >
         insert into teacher(teacher_name, teacher_num, password, teacher_email, teacher_phone)

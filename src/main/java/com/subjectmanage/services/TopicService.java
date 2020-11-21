@@ -9,6 +9,8 @@ public interface TopicService {
 
     public List<Topic> selectAll(int startIndex, int pageSize);
 
+    public int getTotal();
+
     public int addTopic(Topic topic);
 
     public int updateTopic(Topic topic);

@@ -5,12 +5,17 @@
 <!--namespace=绑定一个对应的Dao/Mapper接口-->
 <mapper namespace="com.subjectmanage.mapper.GroupMapper">
 
+    <select id="getGroupById" resultType="com.subjectmanage.beans.Group">
+        select * from `group` WHERE group_id = #{group_id}
+    </select>
+
     <!--查询小组中的所有成员-->
     <select id="getGroupListByTopicId" parameterType="int" resultMap="GroupWithStudents">
         select * from `group` WHERE topic_id = #{topic_id}
     </select>
 
     <resultMap id="GroupWithStudents" type="com.subjectmanage.beans.Group">
+        <result property="group_id" column="group_id"/>
         <collection property="studentList" javaType="ArrayList" ofType="com.subjectmanage.beans.Student" select="com.subjectmanage.mapper.StudentMapper.getStudentListByGroup" column="group_id"/>
     </resultMap>
 
