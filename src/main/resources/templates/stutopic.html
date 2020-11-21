@@ -4,28 +4,42 @@
         <fieldset class="table-search-fieldset">
             <legend>搜索信息</legend>
             <div style="margin: 10px 10px 10px 10px">
-                <form class="layui-form layui-form-pane" action="">
+                <form class="layui-form layui-form-pane">
                     <div class="layui-form-item">
                         <div class="layui-inline">
                             <label class="layui-form-label">课题名称</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="username" autocomplete="off" class="layui-input">
+                                <input id="topic_name" type="text" name="topic_name" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <label class="layui-form-label">课题类型</label>
+                            <label class="layui-form-label">专业类型</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="sex" autocomplete="off" class="layui-input">
+                                <input id="type" type="text" name="type" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">课题老师</label>
+                            <div class="layui-input-inline">
+                                <input id="teacher_name" type="text" name="teacher_name" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
                             <label class="layui-form-label">课题年级</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="city" autocomplete="off" class="layui-input">
+                            <select id="grade" name="grade" >
+                                <option value="unselect">--可选择--</option>
+                                <option value="大一">大一</option>
+                                <option value="大二">大二</option>
+                                <option value="大三">大三</option>
+                            </select>
                             </div>
                         </div>
-                        <div class="layui-inline">
+                        <!--<div class="layui-inline">
                             <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                        </div>-->
+                        <div class="layui-inline">
+                            <div class="layui-btn layui-btn-primary" id="search"><i class="layui-icon"></i> 搜 索</div>
                         </div>
                     </div>
                 </form>
@@ -59,12 +73,25 @@
                 layEvent: 'LAYTABLE_TIPS',
                 icon: 'layui-icon-tips'
             }],
+            parseData:function (result) {
+                return{
+                    "data":result.data,
+                    "code": result.code, //解析接口状态
+                    "msg": result.msg, //解析提示文本
+                    "count": result.count //解析数据长度
+                }
+            },
             cols:
             [
                 [
                 {type: "checkbox", width: 50},
                 {field: 'topic_id', width: 200, title: 'ID', sort: true},
+                {field: 'teacher_name', width: 200, title: '课题老师',templet: function (topic) {
+                         return topic.teacher.teacher_name;
+                    }
+                },
                 {field: 'headline', width: 200, title: '课题标题'},
+                {field: 'grade', width: 200, title: '年级'},
                 {field: 'release_time', width: 200, title: '发布时间'},
                 {field: 'type', width: 200, title: '类型'},
                 {title: '操作', minWidth: 200, toolbar: '#currentTableBar', align: "center"}
@@ -77,7 +104,7 @@
         });
 
         // 监听搜索操作
-        form.on('submit(data-search-btn)', function (data) {
+     /*   form.on('submit(data-search-btn)', function (data) {
             var result = JSON.stringify(data.field);
             layer.alert(result, {
                 title: '最终的搜索信息'
@@ -85,15 +112,35 @@
 
             //执行搜索重载
             table.reload('currentTableId', {
+                url:'/topic/searchTopics',
+                method:'get',
                 page: {
                     curr: 1
-                }
-                , where: {
+                },
+                 where: {
                     searchParams: result
                 }
-            }, 'data');
-
-            return false;
+            },'data');
+        });*/
+        $('#search').on('click', function() {
+            var topic_name = document.getElementById("topic_name").value;
+            var type = document.getElementById("type").value;
+            var grade = document.getElementById("grade").value;
+            var teacher_name = document.getElementById("teacher_name").value;
+            //执行搜索重载
+            table.reload('currentTableId', {
+                url:'/topic/searchTopics',
+                method:'post',
+                page: {
+                    curr: 1
+                },
+                where: {
+                     topic_name : topic_name,
+                     type : type,
+                     grade : grade,
+                     teacher_name : teacher_name
+                }
+            },'data');
         });
 
         /**
@@ -117,10 +164,6 @@
                 $(window).on("resize", function () {
                     layer.full(index);
                 });
-            } else if (obj.event === 'delete') {  // 监听删除操作
-                var checkStatus = table.checkStatus('currentTableId')
-                    , data = checkStatus.data;
-                layer.alert(JSON.stringify(data));
             }
         });
 

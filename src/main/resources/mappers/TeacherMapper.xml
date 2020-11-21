@@ -9,6 +9,10 @@
         select * from teacher WHERE teacher_id = #{teacher_id}
     </select>
 
+    <select id="getTeacherNameById" resultType="String">
+        select teacher_name from teacher WHERE teacher_id = #{teacher_id}
+    </select>
+
     <select id="selectLoginTeacher"  resultType="com.subjectmanage.beans.Teacher">
         select * from teacher WHERE teacher_num = #{teacher_num} and password = #{password}
     </select>

@@ -17,17 +17,61 @@
         <collection property="groupList" column="topic_id" javaType="ArrayList" ofType="com.subjectmanage.beans.Group" select="com.subjectmanage.mapper.GroupMapper.getGroupListByTopicId" />
     </resultMap>
 
-    <select id="selectAll"  resultType="com.subjectmanage.beans.Topic">
+    <select id="selectAll"  resultMap="TopicWithTeacher">
         select * from topic limit #{startIndex},#{pageSize}
     </select>
+
+    <resultMap id="TopicWithTeacher" type="com.subjectmanage.beans.Topic">
+        <result property="topic_id" column="topic_id"/>
+        <result property="teacher_id" column="teacher_id"/>
+        <association property="teacher" column="teacher_id" javaType="com.subjectmanage.beans.Teacher" select="com.subjectmanage.mapper.TeacherMapper.selectTeacher"/>
+        <association property="teacher_name" column="teacher_id" javaType="String" select="com.subjectmanage.mapper.TeacherMapper.getTeacherNameById"/>
+    </resultMap>
 
     <select id="getTotal"  resultType="int">
         select count(*) from topic
     </select>
 
+    <select id="getSearchTotal"  resultType="int">
+        select count(*) from topic
+        <where>
+            <if test="headline!=null">
+                headline like CONCAT('%',#{headline},'%')
+            </if>
+            <if test="type!=null">
+                and type like CONCAT('%',#{type},'%')
+            </if>
+            <if test="teacher_name!=null">
+                and teacher_name like CONCAT('%',#{teacher_name},'%')
+            </if>
+            <if test="grade!=null">
+                and grade = #{grade}
+            </if>
+        </where>
+    </select>
+
+    <select id="searchTopics" resultMap="TopicWithTeacher">
+        select * from topic
+        <where>
+            <if test="headline!=null">
+                headline like CONCAT('%',#{headline},'%')
+            </if>
+            <if test="type!=null">
+                and type like CONCAT('%',#{type},'%')
+            </if>
+            <if test="teacher_name!=null">
+                and teacher_name like CONCAT('%',#{teacher_name},'%')
+            </if>
+            <if test="grade!=null">
+                and grade = #{grade}
+            </if>
+        </where>
+         limit #{startIndex},#{pageSize}
+    </select>
+
     <insert id="addTopic" >
-        insert into topic (teacher_id, headline, release_time, topic_url, type,content,gender)
-            value (#{teacher_id},#{headline},#{release_time},#{topic_url},#{type},#{content},#{gender})
+        insert into topic (teacher_id, headline, release_time, topic_url, type,content,grade)
+            value (#{teacher_id},#{headline},#{release_time},#{topic_url},#{type},#{content},#{grade})
     </insert>
 
     <update id="updateTopic" >
@@ -52,8 +96,8 @@
                 <if test="content!=null">
                     content = #{content}
                 </if>
-                <if test="gender!=null">
-                    gender = #{gender}
+                <if test="grade!=null">
+                    grade = #{grade}
                 </if>
 
 

@@ -13,10 +13,7 @@ import com.subjectmanage.utils.LayuiTableData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +26,7 @@ import java.io.OutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/topic")
@@ -71,7 +69,7 @@ public class TopicController {
         model.addAttribute("groupList",topic.getGroupList());
         model.addAttribute("type",topic.getType());
         model.addAttribute("content",topic.getContent());
-        model.addAttribute("gender",topic.getGender());
+        model.addAttribute("grade",topic.getGrade());
         return "topic-details";
     }
 
@@ -123,4 +121,21 @@ public class TopicController {
         inputStream.close();
 
     }
+
+    @RequestMapping("/searchTopics")
+    @ResponseBody
+    public LayuiTableData searchTopics(@RequestParam String topic_name,@RequestParam String grade,@RequestParam String type,@RequestParam String teacher_name,
+                                       @RequestParam int page,@RequestParam int limit,
+                                       Model model){
+        int startIndex = (page-1)*limit;
+        if(grade.equals("unselect")){
+            grade = null;
+        }
+        List<Topic> topicList = topicService.searchTopics(topic_name,type,grade,teacher_name,startIndex,limit); //分页数据
+        int count = topicService.getSearchTotal(topic_name,type,grade,teacher_name);  //数据总数
+        LayuiTableData layuiTableData = LayuiTableData.layData(count,topicList);//转换成前端需要的数据格式
+        return layuiTableData;
+    }
+
+
 }

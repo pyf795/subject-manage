@@ -5,6 +5,7 @@ import java.util.List;
 public class Topic {
     private int topic_id;
     private int teacher_id;
+    private String teacher_name;
     private String headline;
     private String release_time;
     private String topic_url;
@@ -12,14 +13,14 @@ public class Topic {
     private List<Group> groupList;
     private Teacher teacher;
     private String content;
-    private String gender;
+    private String grade;
 
-    public String getGender() {
-        return gender;
+    public String getTeacher_name() {
+        return teacher_name;
     }
 
-    public void setGender(String gender) {
-        this.gender = gender;
+    public void setTeacher_name(String teacher_name) {
+        this.teacher_name = teacher_name;
     }
 
     public String getContent() {
@@ -96,11 +97,20 @@ public class Topic {
     }
 
 
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+
     @Override
     public String toString() {
         return "Topic{" +
                 "topic_id=" + topic_id +
                 ", teacher_id=" + teacher_id +
+                ", teacher_name='" + teacher_name + '\'' +
                 ", headline='" + headline + '\'' +
                 ", release_time='" + release_time + '\'' +
                 ", topic_url='" + topic_url + '\'' +
@@ -108,7 +118,7 @@ public class Topic {
                 ", groupList=" + groupList +
                 ", teacher=" + teacher +
                 ", content='" + content + '\'' +
-                ", gender='" + gender + '\'' +
+                ", grade='" + grade + '\'' +
                 '}';
     }
 }

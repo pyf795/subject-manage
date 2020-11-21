@@ -8,6 +8,7 @@ import com.subjectmanage.mapper.TopicMapper;
 import com.subjectmanage.services.StudentServiceImpl;
 import com.subjectmanage.services.TopicService;
 import com.subjectmanage.services.TopicServiceImpl;
+import com.subjectmanage.utils.LayuiTableData;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -26,12 +27,8 @@ import java.util.*;
 
     @Test
     void topicTest1() {
-        Topic topic = topicService.getTopicWithGroupById(1);
-        String url = topic.getTopic_url();
-        Path path = Paths.get("src/main/resources/static/",url);
-        String filename=path.toString();
-        String downFilename=filename.substring(filename.lastIndexOf("\\")+1);
-        System.out.println(downFilename);
+        List<Topic> topicList = topicService.selectAll(0,3);
+        System.out.println(topicList);
     }
 
     @Test
@@ -131,8 +128,5 @@ import java.util.*;
         System.out.println(map);
     }
 
-    @Test
-    void test4(){
-        System.out.println(topicService.getTotal());
-    }
+
 }
