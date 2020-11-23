@@ -5,6 +5,10 @@
 <!--namespace=绑定一个对应的Dao/Mapper接口-->
 <mapper namespace="com.subjectmanage.mapper.StudentMapper">
 
+    <select id="getStudentById" resultType="com.subjectmanage.beans.Student">
+        select * from student where student_id = #{student_id}
+    </select>
+
     <!--查询小组中的所有成员-->
     <select id="getStudentListByGroup" parameterType="int" resultType="com.subjectmanage.beans.Student">
         select * from student WHERE group_id = #{group_id}

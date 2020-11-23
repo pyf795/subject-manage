@@ -1,6 +1,7 @@
 package com.subjectmanage.mapper;
 
 import com.subjectmanage.beans.Group;
+import com.subjectmanage.beans.Topic;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -10,6 +11,8 @@ import java.util.List;
 public interface GroupMapper {
 
     public Group getGroupById(int group_id);
+
+    public List<Group> getGroupWithTopic(int group_id);
 
     public List<Group> getGroupListByTopicId(int topic_id);
 

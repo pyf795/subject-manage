@@ -1,10 +1,12 @@
 package com.subjectmanage;
 
+import com.subjectmanage.beans.Group;
 import com.subjectmanage.beans.PageElement;
 import com.subjectmanage.beans.Student;
 import com.subjectmanage.beans.Topic;
 import com.subjectmanage.mapper.GroupMapper;
 import com.subjectmanage.mapper.TopicMapper;
+import com.subjectmanage.services.GroupServiceImpl;
 import com.subjectmanage.services.StudentServiceImpl;
 import com.subjectmanage.services.TopicService;
 import com.subjectmanage.services.TopicServiceImpl;
@@ -25,10 +27,12 @@ import java.util.*;
     @Resource
     private TopicServiceImpl topicService;
 
+    @Resource
+    private GroupServiceImpl groupService;
     @Test
     void topicTest1() {
-        List<Topic> topicList = topicService.selectAll(0,3);
-        System.out.println(topicList);
+       List<Group> groups = groupService.getGroupWithTopic(1);
+        System.out.println(groups);
     }
 
     @Test

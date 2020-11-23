@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace=绑定一个对应的Dao/Mapper接口-->
+<mapper namespace="com.subjectmanage.mapper.FileMapper">
+
+    <select id="getFileById" resultType="com.subjectmanage.beans.File">
+        select * from file where file_id = #{file_id}
+    </select>
+
+    <insert id="addFile" useGeneratedKeys="true" keyProperty="file_id">
+        insert into file (group_id, headline, release_time, file_url, type, topic_id)
+        value (#{group_id},#{headline},#{release_time},#{file_url},#{type},#{topic_id})
+    </insert>
+
+    <delete id="deleteFile">
+        delete from file where file_id = #{file_id}
+    </delete>
+
+</mapper>

@@ -46,6 +46,11 @@ public class TopicController {
         return "stutopic";
     }
 
+    @RequestMapping("/chosenTopic")
+    public String chosenTopic(){
+        return "chosen-topic";
+    }
+
     @RequestMapping("/getTopicList")
     @ResponseBody
     public LayuiTableData topicList(@RequestParam int page,@RequestParam int limit,Model model){
@@ -137,5 +142,19 @@ public class TopicController {
         return layuiTableData;
     }
 
+
+    @RequestMapping("/getChosenTopic")
+    @ResponseBody
+    public LayuiTableData getChosenTopics(@RequestParam int page,@RequestParam int limit,HttpSession session){
+       Student loginUser = (Student) session.getAttribute("loginUser");
+       if(loginUser.getGroup_id()!=0){
+           List<Group> groupList = groupService.getGroupWithTopic(loginUser.getGroup_id());
+           int count = groupList.size();  //数据总数
+           LayuiTableData layuiTableData = LayuiTableData.layData(count,groupList);//转换成前端需要的数据格式
+           return layuiTableData;
+       }
+
+        return LayuiTableData.layData(0,null);
+    }
 
 }

@@ -1,0 +1,58 @@
+<div class="layuimini-main" xmlns:th="http://www.thymeleaf.org">
+
+    <form id="choose" th:action="@{/file/stu/uploadFile}" method="post" enctype="multipart/form-data">
+      <div class="layui-form layuimini-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label required">文档上传</label>
+            <a>所有文档请打包成压缩文件方便上传</a>
+            <div class="layui-input-block">
+                <input lay-verify="required" type="file" name="uploadfile"  class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">文档类型</label>
+            <div class="layui-input-block">
+                <select name="type" lay-verify="required" >
+                    <option value="unselect">--可选择--</option>
+                    <option value="m">中期文档</option>
+                    <option value="e">期末文档</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="upload">上传文档</button>
+            </div>
+
+        </div>
+      </div>
+    </form>
+
+</div>
+<script>
+    layui.use(['form', 'table'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            table = layui.table,
+            $ = layui.$;
+
+        /**
+         * 初始化表单，要加上，不然刷新部分组件可能会不加载
+         */
+        form.render();
+
+        // 当前弹出层，防止ID被覆盖
+        var parentIndex = layer.index;
+
+        //监听提交
+        form.on('submit(upload)', function (data) {
+            data = data.field;
+            if (data.type == 'unselect') {
+                layer.msg('未选择文档类型！');
+                return false;
+            }
+            return true;
+        });
+
+    });
+</script>

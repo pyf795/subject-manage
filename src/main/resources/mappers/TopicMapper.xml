@@ -5,6 +5,9 @@
 <!--namespace=绑定一个对应的Dao/Mapper接口-->
 <mapper namespace="com.subjectmanage.mapper.TopicMapper">
 
+    <select id="getTopicById" parameterType="int" resultType="com.subjectmanage.beans.Topic">
+        select * from topic WHERE topic_id = #{topic_id}
+    </select>
     <!--查询课题以及所有成员-->
     <select id="getTopicWithGroupById" parameterType="int" resultMap="TopicWithGroup">
         select * from topic WHERE topic_id = #{topic_id}

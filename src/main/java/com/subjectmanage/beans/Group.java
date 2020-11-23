@@ -8,7 +8,51 @@ public class Group {
     private int current_numbers;
     private int volume;
     private List<Student> studentList;
+    private Topic topic;
+    private int mfile_id;
+    private int efile_id;
+    private File mfile;
+    private File efile;
 
+    public int getMfile_id() {
+        return mfile_id;
+    }
+
+    public void setMfile_id(int mfile_id) {
+        this.mfile_id = mfile_id;
+    }
+
+    public int getEfile_id() {
+        return efile_id;
+    }
+
+    public void setEfile_id(int efile_id) {
+        this.efile_id = efile_id;
+    }
+
+    public File getMfile() {
+        return mfile;
+    }
+
+    public void setMfile(File mfile) {
+        this.mfile = mfile;
+    }
+
+    public File getEfile() {
+        return efile;
+    }
+
+    public void setEfile(File efile) {
+        this.efile = efile;
+    }
+
+    public Topic getTopic() {
+        return topic;
+    }
+
+    public void setTopic(Topic topic) {
+        this.topic = topic;
+    }
 
     public int getGroup_id() {
         return group_id;
@@ -59,6 +103,11 @@ public class Group {
                 ", current_numbers=" + current_numbers +
                 ", volume=" + volume +
                 ", studentList=" + studentList +
+                ", topic=" + topic +
+                ", mfile_id=" + mfile_id +
+                ", efile_id=" + efile_id +
+                ", mfile=" + mfile +
+                ", efile=" + efile +
                 '}';
     }
 }

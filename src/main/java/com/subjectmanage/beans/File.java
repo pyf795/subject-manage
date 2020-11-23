@@ -7,7 +7,7 @@ public class File {
     private String release_time;
     private String file_url;
     private String type;
-    private String topic_id;
+    private int topic_id;
 
     public int getFile_id() {
         return file_id;
@@ -57,11 +57,11 @@ public class File {
         this.type = type;
     }
 
-    public String getTopic_id() {
+    public int getTopic_id() {
         return topic_id;
     }
 
-    public void setTopic_id(String topic_id) {
+    public void setTopic_id(int topic_id) {
         this.topic_id = topic_id;
     }
 

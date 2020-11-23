@@ -9,6 +9,20 @@
         select * from `group` WHERE group_id = #{group_id}
     </select>
 
+    <select id="getGroupWithTopic" resultMap="GroupWithTopic">
+        select * from `group` WHERE group_id = #{group_id}
+    </select>
+
+    <!--<association property="mfile" column="mfile_id" javaType="com.subjectmanage.beans.File" select="com.subjectmanage.mapper.TopicMapper.getFileById"/>
+        <association property="efile" column="efile_id" javaType="com.subjectmanage.beans.File" select="com.subjectmanage.mapper.TopicMapper.getFileById"/>-->
+    <resultMap id="GroupWithTopic" type="com.subjectmanage.beans.Group">
+        <result property="group_id" column="group_id"/>
+        <result property="topic_id" column="topic_id"/>
+        <association property="mfile" column="mfile_id" javaType="com.subjectmanage.beans.File" select="com.subjectmanage.mapper.FileMapper.getFileById"/>
+        <association property="efile" column="efile_id" javaType="com.subjectmanage.beans.File" select="com.subjectmanage.mapper.FileMapper.getFileById"/>
+        <collection property="topic" javaType="com.subjectmanage.beans.Topic"  select="com.subjectmanage.mapper.TopicMapper.getTopicById" column="topic_id"/>
+    </resultMap>
+
     <!--查询小组中的所有成员-->
     <select id="getGroupListByTopicId" parameterType="int" resultMap="GroupWithStudents">
         select * from `group` WHERE topic_id = #{topic_id}
@@ -24,8 +38,8 @@
     </select>
 
     <insert id="addGroup" >
-        insert into `group` (group_id, topic_id, current_numbers, volume)
-            value (#{group_id},#{topic_id},#{current_numbers},#{volume})
+        insert into `group` (group_id, topic_id, current_numbers, volume,mfile_id,efile_id)
+            value (#{group_id},#{topic_id},#{current_numbers},#{volume},#{mfile_id},#{efile_id})
     </insert>
 
     <update id="updateGroup" >
@@ -39,7 +53,13 @@
                     current_numbers = #{current_numbers},
                 </if>
                 <if test="volume!=null">
-                    volume = #{volume}
+                    volume = #{volume},
+                </if>
+                <if test="mfile_id!=null">
+                    mfile_id = #{mfile_id},
+                </if>
+                <if test="efile_id!=null">
+                    efile_id = #{efile_id}
                 </if>
 
         </set>

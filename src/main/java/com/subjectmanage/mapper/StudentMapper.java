@@ -7,6 +7,9 @@ import java.util.List;
 
 @Mapper
 public interface StudentMapper {
+
+    public Student getStudentById(int student_id);
+
     public List<Student> getStudentListByGroup(int group_id);
 
     public Student selectLoginStudent(String student_num,String password);
