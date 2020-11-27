@@ -3,6 +3,7 @@ package com.subjectmanage.mapper;
 import com.subjectmanage.beans.Group;
 import com.subjectmanage.beans.Topic;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 

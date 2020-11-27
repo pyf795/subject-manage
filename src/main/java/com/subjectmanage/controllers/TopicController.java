@@ -46,7 +46,7 @@ public class TopicController {
         return "stutopic";
     }
 
-    @RequestMapping("/chosenTopic")
+    @RequestMapping("/chosenTopic")//只有学生有
     public String chosenTopic(){
         return "chosen-topic";
     }
@@ -78,7 +78,7 @@ public class TopicController {
         return "topic-details";
     }
 
-    @RequestMapping("/chooseTopic")
+    @RequestMapping("/chooseTopic")//只有学生有
     public String chooseTopic(@RequestParam int topic_id, @RequestParam int group_id, HttpSession session){
 
 
@@ -143,7 +143,7 @@ public class TopicController {
     }
 
 
-    @RequestMapping("/getChosenTopic")
+    @RequestMapping("/getChosenTopic") //只有学生有
     @ResponseBody
     public LayuiTableData getChosenTopics(@RequestParam int page,@RequestParam int limit,HttpSession session){
        Student loginUser = (Student) session.getAttribute("loginUser");

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
@@ -55,9 +57,11 @@ public class LoginController {
     public String Login(@RequestParam("user_num") String user_num, @RequestParam("password") String password,
                         @RequestParam("captcha") String captcha,
                         @RequestParam("user_type") String user_type,
-                        Model model, HttpSession session){
+                         boolean rememberMe,
+                        Model model, HttpSession session,HttpServletRequest request,HttpServletResponse response){
         Student student = null;
         Teacher teacher = null;
+        System.out.println(rememberMe);
         Object user = session.getAttribute("loginUser");
         if(user!=null){
             model.addAttribute("msg","你已经登陆过了！不要重复登陆");
@@ -80,10 +84,12 @@ public class LoginController {
         if(student!=null){
             session.setAttribute("loginUser",student);
             session.setAttribute("user_type",user_type);
+            rememberMe(rememberMe,request,response,student.getStudent_num(),student.getPassword());
             return "redirect:/index";
         }else if(teacher!=null){
             session.setAttribute("loginUser",teacher);
             session.setAttribute("user_type",user_type);
+            rememberMe(rememberMe,request,response,teacher.getTeacher_num(),teacher.getPassword());
             return "redirect:/index";
         }
         else{
@@ -93,9 +99,32 @@ public class LoginController {
 
     }
 
+    public void rememberMe(boolean rememberMe,HttpServletRequest request,HttpServletResponse response,String username,String password){
+        if (rememberMe){
+            //记住用户
+            Cookie nameCookie = new Cookie("name",username);
+            Cookie pwdCookie = new Cookie("pwd",password);
+            //3天
+            nameCookie.setMaxAge(3*24*60*60);
+            pwdCookie.setMaxAge(3*24*60*60);
+            response.addCookie(nameCookie);
+            response.addCookie(pwdCookie);
+        }else{//清除cookie
+            Cookie[] cookies = request.getCookies();
+            for(Cookie cookie:cookies ){
+                if (cookie.getName().equals("name")||cookie.getName().equals("pwd")) {
+                    cookie.setValue(null);
+                    cookie.setMaxAge(0);// 立即销毁cookie
+                    System.out.println("被删除的cookie名字为:" + cookie.getName());
+                    response.addCookie(cookie);
+                }
+            }
+        }
+    }
+
     @RequestMapping(value = "/initMenu")
     @ResponseBody
-    public Map<String,Object> initMenu(HttpSession session){
+    public Map<String,Object> initMenu(HttpSession session, HttpServletRequest request){
         String user_type = (String)session.getAttribute("user_type");
         Map<String,Object> map=new HashMap<>();
         if(user_type!=null&&user_type.equals("学生")){

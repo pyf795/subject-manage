@@ -18,5 +18,9 @@ public class MvcConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**")
                 .excludePathPatterns("/login/**","/images/**","/css/**","/js/**","/font/**","/lib/**","/api/**",
                         "/page/**","/lay/**");
+        registry.addInterceptor(new StuIntercepter())
+                .addPathPatterns("/file/stu/*");
+        registry.addInterceptor(new TIntercepter())
+                .addPathPatterns("/teach/*");
     }
 }

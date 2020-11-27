@@ -13,7 +13,7 @@
     <script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
     <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
     <script th:src="@{/lib/jq-module/jquery.particleground.min.js}" charset="utf-8"></script>
-
+    <script th:src="@{/js/jquery.cookie.js}" charset="utf-8"></script>
     <!--[if lt IE 9]>
     <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
     <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
@@ -35,7 +35,16 @@
         .captcha-img img {height:34px;border:1px solid #e6e6e6;height:36px;width:100%;}
     </style>
 </head>
+
+
+
 <body>
+<script>
+    $(function () {
+        $("#username").val($.cookie('name'));
+        $("#password").val($.cookie('pwd'));
+    });
+</script>
 <div class="layui-container">
     <div class="admin-login-background">
         <div class="layui-form login-form">
@@ -47,11 +56,13 @@
                 <a th:href="@{/index}">已登录？去主页</a>
                 <div class="layui-form-item">
                     <label class="layui-icon layui-icon-username" ></label>
-                    <input type="text" name="user_num" lay-verify="required|account" placeholder="用户名" autocomplete="off" class="layui-input" >
+                    <input id="username" type="text" name="user_num"
+                           lay-verify="required|account" placeholder="用户名" autocomplete="off" class="layui-input" >
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-icon layui-icon-password" ></label>
-                    <input type="password" id="password" name="password" lay-verify="required|password" placeholder="密码" autocomplete="off" class="layui-input" >
+                    <input  type="password" id="password" name="password" lay-verify="required|password"
+                            placeholder="密码" autocomplete="off" class="layui-input" >
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-icon layui-icon-vercode" ></label>
@@ -68,7 +79,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <input type="checkbox" name="rememberMe" value="true" lay-skin="primary" title="记住密码">
+                    <input id="rememberMe" type="checkbox" name="rememberMe" value="true" lay-skin="primary" title="记住我">
                 </div>
                 <div class="layui-form-item">
                     <button class="layui-btn layui-btn layui-btn-normal layui-btn-fluid" lay-submit lay-filter="login">登 入</button>
