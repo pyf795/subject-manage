@@ -132,22 +132,58 @@ public class LoginController {
             Map<String,Object>homeInfo=new HashMap<>();
             homeInfo.put("title","首页");
             homeInfo.put("icon","fa fa-home");
-            homeInfo.put("href","page/welcome-1.html");
+            homeInfo.put("href","/toWelcome");
             map.put("homeInfo",homeInfo);
             Map<String,Object>logoInfo=new HashMap<>();
-            logoInfo.put("title","layuiAdmin");
-            logoInfo.put("image","images/logo.png");
-            logoInfo.put("href","");
+            logoInfo.put("title","综设管理系统");
+            logoInfo.put("image","images/logo.jpg");
+            logoInfo.put("href","/index");
             map.put("logoInfo",logoInfo);
+            List<Map<String,Object>> menuInfo=new ArrayList<>();//保证菜单的顺序
+            List<Map<String,Object>>childInfo=new ArrayList<>();
 
-            Map<String,Object>menuInfo=new LinkedHashMap<>();//保证菜单的顺序
-      /*  List<Permission> permission = getPermission(1, 0);
-        permission.forEach(t->{
-            menuInfo.put(t.getTitle(),t);
-        });*/
+
+
+            Map<String,Object>aInfo=new HashMap<>();
+            aInfo.put("title","个人信息修改");
+            aInfo.put("icon","fa fa-home");
+            aInfo.put("href","/userDetails");
+            childInfo.add(aInfo);
+
+            Map<String,Object>bInfo=new HashMap<>();
+            bInfo.put("title","查看所有课题");
+            bInfo.put("icon","fa fa-window-maximize");
+            bInfo.put("href","/topic/toTopicList");
+            childInfo.add(bInfo);
+
+            Map<String,Object>dInfo=new HashMap<>();
+            dInfo.put("title","查看已选课题");
+            dInfo.put("icon","fa fa-window-maximize");
+            dInfo.put("href","/topic/chosenTopic");
+            childInfo.add(dInfo);
+
+            Map<String,Object>eInfo=new HashMap<>();
+            eInfo.put("title","查看课题成绩");
+            eInfo.put("icon","fa fa-window-maximize");
+            eInfo.put("href","/topic/topicScore");
+            childInfo.add(eInfo);
+
+
+
+            Map<String,Object>cInfo=new HashMap<>();
+            cInfo.put("title","欢迎你");
+            cInfo.put("icon","fa fa-address-book");
+            cInfo.put("href","");
+            cInfo.put("target","_self");
+            cInfo.put("child",childInfo);
+
+            menuInfo.add(cInfo);
+
+
             map.put("menuInfo",menuInfo);
             return map;
-        }else if(user_type!=null&&user_type.equals("老师")){
+        }
+        else if(user_type!=null&&user_type.equals("老师")){
             Teacher loginUser = (Teacher)session.getAttribute("loginUser");
             Map<String,Object>homeInfo=new HashMap<>();
             homeInfo.put("title","首页");
@@ -155,9 +191,9 @@ public class LoginController {
             homeInfo.put("href","page/welcome-1.html");
             map.put("homeInfo",homeInfo);
             Map<String,Object>logoInfo=new HashMap<>();
-            logoInfo.put("title","综合管理系统");
-            logoInfo.put("image","images/logo.png");
-            logoInfo.put("href","");
+            logoInfo.put("title","综设管理系统");
+            logoInfo.put("image","images/logo.jpg");
+            logoInfo.put("href","/index");
             map.put("logoInfo",logoInfo);
 
             List<Map<String,Object>> menuInfo=new ArrayList<>();//保证菜单的顺序
@@ -168,15 +204,32 @@ public class LoginController {
             Map<String,Object>aInfo=new HashMap<>();
             aInfo.put("title","个人信息修改");
             aInfo.put("icon","fa fa-home");
-            aInfo.put("href","");
+            aInfo.put("href","/userDetails");
             childInfo.add(aInfo);
 
             Map<String,Object>bInfo=new HashMap<>();
             bInfo.put("title","查看所有课题");
             bInfo.put("icon","fa fa-window-maximize");
-            bInfo.put("href","");
+            bInfo.put("href","/topic/toTopicList");
             childInfo.add(bInfo);
 
+            Map<String,Object>dInfo=new HashMap<>();
+            dInfo.put("title","查看个人发布课题");
+            dInfo.put("icon","fa fa-window-maximize");
+            dInfo.put("href","");
+            childInfo.add(dInfo);
+
+            Map<String,Object>eInfo=new HashMap<>();
+            eInfo.put("title","课题小组确认管理");
+            eInfo.put("icon","fa fa-window-maximize");
+            eInfo.put("href","");
+            childInfo.add(eInfo);
+
+            Map<String,Object>fInfo=new HashMap<>();
+            fInfo.put("title","学生课题小组管理");
+            fInfo.put("icon","fa fa-window-maximize");
+            fInfo.put("href","");
+            childInfo.add(fInfo);
 
 
             Map<String,Object>cInfo=new HashMap<>();

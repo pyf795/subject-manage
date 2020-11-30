@@ -1,14 +1,8 @@
 package com.subjectmanage.controllers;
 
 
-import com.subjectmanage.beans.Group;
-import com.subjectmanage.beans.Student;
-import com.subjectmanage.beans.Teacher;
-import com.subjectmanage.beans.Topic;
-import com.subjectmanage.services.GroupService;
-import com.subjectmanage.services.GroupServiceImpl;
-import com.subjectmanage.services.StudentServiceImpl;
-import com.subjectmanage.services.TopicServiceImpl;
+import com.subjectmanage.beans.*;
+import com.subjectmanage.services.*;
 import com.subjectmanage.utils.LayuiTableData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,6 +35,9 @@ public class TopicController {
     @Autowired
     private StudentServiceImpl studentService;
 
+    @Autowired
+    private ScoreServiceImpl scoreService;
+
     @RequestMapping("/toTopicList")
     public String toTopicList(){
         return "stutopic";
@@ -50,6 +47,12 @@ public class TopicController {
     public String chosenTopic(){
         return "chosen-topic";
     }
+
+    @RequestMapping("/topicScore")//只有学生有
+    public String topicScore(){
+        return "stuscore";
+    }
+
 
     @RequestMapping("/getTopicList")
     @ResponseBody
@@ -155,6 +158,16 @@ public class TopicController {
        }
 
         return LayuiTableData.layData(0,null);
+    }
+
+    @RequestMapping("/getTopicScores") //只有学生有
+    @ResponseBody
+    public LayuiTableData getTopicScores(@RequestParam int page,@RequestParam int limit,HttpSession session){
+        Student loginUser = (Student) session.getAttribute("loginUser");
+        int student_id = loginUser.getStudent_id();
+        List<Score> scoreList = scoreService.getScoreByStudent(student_id);
+        int count = scoreList.size();
+        return LayuiTableData.layData(count,scoreList);
     }
 
 }

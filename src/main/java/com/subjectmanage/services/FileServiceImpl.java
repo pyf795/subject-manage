@@ -55,16 +55,16 @@ public class FileServiceImpl implements FileService {
             //循环输出上传的文件  MultipartFile 支持传输多个文件
             for (MultipartFile file : uploadfile) {
                 String path = System.getProperty("user.dir");
-                String realPath = path + "\\src\\main\\resources\\static\\file";
+                String realPath = path + "\\src\\main\\resources\\static";
 
                 //String staticPath = ClassUtils.getDefaultClassLoader().getResource("static").getPath();
                 // 获取上传文件的原始名称
                 String originalFilename = file.getOriginalFilename();
                 // 设置上传文件的保存地址目录
-                //String urlPath = "file/";
+                String urlPath = "file/";
 
-                String savePath = realPath+"/";
-                String visitPath = savePath;
+                String savePath = realPath+"/file/";
+                String visitPath = urlPath;
                 java.io.File filePath = new java.io.File(savePath);
                 // 如果保存文件的地址不存在，就先创建目录
                 if (!filePath.exists()) {
@@ -88,7 +88,7 @@ public class FileServiceImpl implements FileService {
                         System.out.println(file1.getFile_id());
                         if(type.equals("m")){//中期文档
                             if(group.getMfile_id()!=0) {
-                                String url = fileMapper.getFileById(group.getMfile_id()).getFile_url();
+                                String url = realPath+fileMapper.getFileById(group.getMfile_id()).getFile_url();
                                 java.io.File deleteFile = new java.io.File(url);
                                 System.out.println(deleteFile.delete());
                                 fileMapper.deleteFile(group.getMfile_id());
@@ -96,7 +96,7 @@ public class FileServiceImpl implements FileService {
                             group.setMfile_id(file1.getFile_id());
                         }else if(type.equals("e")){
                             if(group.getEfile_id()!=0){
-                            String url = fileMapper.getFileById(group.getMfile_id()).getFile_url();
+                            String url = realPath+fileMapper.getFileById(group.getMfile_id()).getFile_url();
                             java.io.File deleteFile = new java.io.File(url);
                                 System.out.println(deleteFile.delete());
                                 fileMapper.deleteFile(group.getEfile_id());

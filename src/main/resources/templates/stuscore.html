@@ -1,0 +1,104 @@
+<div class="layuimini-container layuimini-page-anim" xmlns:th="http://www.thymeleaf.org">
+    <div class="layuimini-main">
+
+
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+
+        <script type="text/html" id="currentTableBar">
+            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="detail">详情</a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="download">下载评分表</a>
+        </script>
+
+    </div>
+</div>
+
+<script>
+    layui.use(['form', 'table','miniPage','element'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table,
+            miniPage = layui.miniPage;
+
+        table.render({
+            elem: '#currentTableId',
+            url:'/topic/getTopicScores',
+            /*toolbar: '#toolbarDemo',*/
+            defaultToolbar: ['filter', 'exports', 'print', {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            parseData:function (result) {
+                return{
+                    "data":result.data,
+                    "code": result.code, //解析接口状态
+                    "msg": result.msg, //解析提示文本
+                    "count": result.count //解析数据长度
+                }
+            },
+            cols:
+                [
+                    [
+                        {field: 'group_id', width: 200, title: '小组ID', sort: true},
+                        {field: 'headline', width: 200, title: '课题名称（标题）',templet: function (score) {
+                                return score.topic.headline;
+                            }
+                        },
+                        {field: 'grade', width: 200, title: '年级',templet: function (score) {
+                                return score.topic.grade;
+                            }
+                        },
+                        {field: 'student_name', width: 200, title: '学生名称',templet: function (score) {
+                            return score.student.student_name;
+                         }},
+                        {field: 'score', width: 200, title: '得分'},
+                        {title: '操作', minWidth: 200, toolbar: '#currentTableBar', align: "center"}
+                    ]
+                ],
+            limits: [5, 10, 15, 25, 50, 100],
+            page: true,
+            limit:5,
+            skin: 'line'
+        });
+
+
+
+
+
+        //监听表格复选框选择
+        table.on('checkbox(currentTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+        /*table.on('tool(currentTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'detail') {
+
+                console.log(data.topic_id);
+
+                var content = miniPage.getHrefContent('topic/details?topic_id='+data.topic_id);
+                console.log(content);
+                var openWH = miniPage.getOpenWidthHeight();
+
+                var index = layer.open({
+                    title: '详情',
+                    type: 1,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: [openWH[0] + 'px', openWH[1] + 'px'],
+                    offset: [openWH[2] + 'px', openWH[3] + 'px'],
+                    content: content
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            } else if (obj.event === 'download') {
+
+                //window.location.href="/topic/downloadTopic?topic_id="+data.topic_id;
+            }
+        });*/
+
+    });
+</script>

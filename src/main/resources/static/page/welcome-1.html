@@ -21,69 +21,121 @@
     .welcome .layuimini-notice-title {line-height:28px;font-size:14px;}
     .welcome .layuimini-notice-extra {position:absolute;top:50%;margin-top:-8px;right:16px;display:inline-block;height:16px;color:#999;}
 </style>
-<div class="layuimini-container layuimini-page-anim">
+
+<div class="layuimini-container layuimini-page-anim" xmlns:th="http://www.thymeleaf.org">
+    <!--<script th:src="@{lib/jquery-3.4.1/jquery-3.4.1.min.js}">
+    $(function () {
+
+        $.ajax({
+            url: "/getAnnouncement",
+            data:JSON.stringify({startIndex:0,pageSize:6}),
+            type: "get",
+            async:false,
+            // 定义发送请求的数据格式为JSON字符串
+            contentType: "application/json;charset=UTF-8",
+            //定义回调响应的数据格式为 JSON 字符串,该属性可以省略
+            dataType: "json",
+            //成功响应的结果
+            success: function (data) {
+                var length = data.aList.length;
+                var laypage = layui.laypage;
+                laypage.render({
+                    elem: 'page'
+                    ,count: length
+                    ,limit:6
+                    ,jump: function(obj){
+                        var html = '';
+                        for(var i=0;i<length;i++){
+                            html +='<div class="layuimini-notice">' +
+                                '<div class="layuimini-notice-title">'+data.aList[i].a_title+'</div>' +
+                                '<div class="layuimini-notice-extra">data.aList[i].release_time</div>' +
+                                '<div class="layuimini-notice-content layui-hide">' +data.aList[i].a_content+
+                                '</div>' +
+                                '</div>';
+                        }
+                        document.getElementById("announcement").innerHTML = html;
+                    }
+                })
+            },
+            error: function(e) {
+                var res = $.parseJSON(e.responseText);
+                layer.msg(res.msg);
+            }
+        });
+        $('body').on('click', '.layuimini-notice', function () {
+            var title = $(this).children('.layuimini-notice-title').text(),
+                noticeTime = $(this).children('.layuimini-notice-extra').text(),
+                content = $(this).children('.layuimini-notice-content').html();
+            var html = '<div style="padding:15px 20px; text-align:justify; line-height: 22px;border-bottom:1px solid #e2e2e2;background-color: #2f4056;color: #ffffff">\n' +
+                '<div style="text-align: center;margin-bottom: 20px;font-weight: bold;border-bottom:1px solid #718fb5;padding-bottom: 5px"><h4 class="text-danger">' + title + '</h4></div>\n' +
+                '<div style="font-size: 12px">' + content + '</div>\n' +
+                '</div>\n';
+            parent.layer.open({
+                type: 1,
+                title: '系统公告' + '<span style="float: right;right: 1px;font-size: 12px;color: #b1b3b9;margin-top: 1px">' + noticeTime + '</span>',
+                area: '300px;',
+                shade: 0.8,
+                id: 'layuimini-notice',
+                btn: ['确定'],
+                btnAlign: 'c',
+                moveType: 1,
+                content: html,
+                success: function (layero) {
+                    /*   var btn = layero.find('.layui-layer-btn');
+                       btn.find('.layui-layer-btn0').attr({
+                           href: 'https://gitee.com/zhongshaofa/layuimini',
+                           target: '_blank'
+                       });*/
+                }
+            });
+        });
+    });
+
+</script>-->
     <div class="layuimini-main welcome">
         <div class="layui-row layui-col-space15">
             <div class="layui-col-md8">
                 <div class="layui-row layui-col-space15">
                     <div class="layui-col-md6">
                         <div class="layui-card">
-                            <div class="layui-card-header"><i class="fa fa-warning icon"></i>数据统计</div>
+                            <div class="layui-card-header"><i class="fa fa-warning icon"></i>时间/天气</div>
                             <div class="layui-card-body">
                                 <div class="welcome-module">
                                     <div class="layui-row layui-col-space10">
-                                        <div class="layui-col-xs6">
+                                        <div class="layui-col-xs12">
                                             <div class="panel layui-bg-number">
                                                 <div class="panel-body">
                                                     <div class="panel-title">
                                                         <span class="label pull-right layui-bg-blue">实时</span>
-                                                        <h5>用户统计</h5>
+                                                        <h2>当地时间</h2>
                                                     </div>
                                                     <div class="panel-content">
-                                                        <h1 class="no-margins">1234</h1>
-                                                        <small>当前分类总记录数</small>
+                                                        <h1 class="no-margins" id="time"></h1>
+                                                        <!--<small>当前分类总记录数</small>-->
+                                                        <!--setInterval实时显示时间-->
+                                                        <script>
+                                                            function mytime(){
+                                                                var a = new Date();
+                                                                var b = a.toLocaleTimeString();
+                                                                var c = a.toLocaleDateString();
+                                                                document.getElementById("time").innerHTML = c+"&nbsp"+b;
+                                                            }
+                                                            setInterval(function() {mytime()},1000);
+                                                        </script>
+
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="layui-col-xs6">
-                                            <div class="panel layui-bg-number">
-                                                <div class="panel-body">
-                                                    <div class="panel-title">
-                                                        <span class="label pull-right layui-bg-cyan">实时</span>
-                                                        <h5>商品统计</h5>
-                                                    </div>
-                                                    <div class="panel-content">
-                                                        <h1 class="no-margins">1234</h1>
-                                                        <small>当前分类总记录数</small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="layui-col-xs6">
-                                            <div class="panel layui-bg-number">
-                                                <div class="panel-body">
-                                                    <div class="panel-title">
-                                                        <span class="label pull-right layui-bg-orange">实时</span>
-                                                        <h5>浏览统计</h5>
-                                                    </div>
-                                                    <div class="panel-content">
-                                                        <h1 class="no-margins">1234</h1>
-                                                        <small>当前分类总记录数</small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="layui-col-xs6">
+                                        <div class="layui-col-xs12">
                                             <div class="panel layui-bg-number">
                                                 <div class="panel-body">
                                                     <div class="panel-title">
                                                         <span class="label pull-right layui-bg-green">实时</span>
-                                                        <h5>订单统计</h5>
+                                                        <h2>天气</h2>
                                                     </div>
                                                     <div class="panel-content">
-                                                        <h1 class="no-margins">1234</h1>
-                                                        <small>当前分类总记录数</small>
+                                                        <iframe width="240" height="25" frameborder="0" scrolling="no" hspace="0" src="https://i.tianqi.com/?c=code&id=34"></iframe>
                                                     </div>
                                                 </div>
                                             </div>
@@ -124,9 +176,9 @@
                                             </a>
                                         </div>
                                         <div class="layui-col-xs3 layuimini-qiuck-module">
-                                            <a href="javascript:;" layuimini-content-href="page/form.html" data-title="表单示例" data-icon="fa fa-calendar">
+                                            <a href="javascript:;" layuimini-content-href="topic/topicScore" data-title="得分" data-icon="fa fa-calendar">
                                                 <i class="fa fa-calendar"></i>
-                                                <cite>表单示例</cite>
+                                                <cite>得分</cite>
                                             </a>
                                         </div>
                                         <div class="layui-col-xs3 layuimini-qiuck-module">
@@ -168,19 +220,12 @@
 
                 <div class="layui-card">
                     <div class="layui-card-header"><i class="fa fa-bullhorn icon icon-tip"></i>系统公告</div>
-                    <div class="layui-card-body layui-text">
+                    <div id="announcement" class="layui-card-body layui-text">
                         <div class="layuimini-notice">
-                            <div class="layuimini-notice-title">修改选项卡样式</div>
-                            <div class="layuimini-notice-extra">2019-07-11 23:06</div>
+                            <div class="layuimini-notice-title">dd</div>
+                            <div class="layuimini-notice-extra">dd</div>
                             <div class="layuimini-notice-content layui-hide">
-                                界面足够简洁清爽。<br>
-                                一个接口几行代码而已直接初始化整个框架，无需复杂操作。<br>
-                                支持多tab，可以打开多窗口。<br>
-                                支持无限级菜单和对font-awesome图标库的完美支持。<br>
-                                失效以及报错菜单无法直接打开，并给出弹出层提示完美的线上用户体验。<br>
-                                url地址hash定位，可以清楚看到当前tab的地址信息。<br>
-                                刷新页面会保留当前的窗口，并且会定位当前窗口对应左侧菜单栏。<br>
-                                移动端的友好支持。<br>
+                              dd
                             </div>
                         </div>
                         <div class="layuimini-notice">
@@ -254,6 +299,7 @@
                             </div>
                         </div>
                     </div>
+                    <div id="page"></div>
                 </div>
 
                 <div class="layui-card">
@@ -338,33 +384,7 @@
         /**
          * 查看公告信息
          **/
-        $('body').on('click', '.layuimini-notice', function () {
-            var title = $(this).children('.layuimini-notice-title').text(),
-                noticeTime = $(this).children('.layuimini-notice-extra').text(),
-                content = $(this).children('.layuimini-notice-content').html();
-            var html = '<div style="padding:15px 20px; text-align:justify; line-height: 22px;border-bottom:1px solid #e2e2e2;background-color: #2f4056;color: #ffffff">\n' +
-                '<div style="text-align: center;margin-bottom: 20px;font-weight: bold;border-bottom:1px solid #718fb5;padding-bottom: 5px"><h4 class="text-danger">' + title + '</h4></div>\n' +
-                '<div style="font-size: 12px">' + content + '</div>\n' +
-                '</div>\n';
-            parent.layer.open({
-                type: 1,
-                title: '系统公告' + '<span style="float: right;right: 1px;font-size: 12px;color: #b1b3b9;margin-top: 1px">' + noticeTime + '</span>',
-                area: '300px;',
-                shade: 0.8,
-                id: 'layuimini-notice',
-                btn: ['查看', '取消'],
-                btnAlign: 'c',
-                moveType: 1,
-                content: html,
-                success: function (layero) {
-                    var btn = layero.find('.layui-layer-btn');
-                    btn.find('.layui-layer-btn0').attr({
-                        href: 'https://gitee.com/zhongshaofa/layuimini',
-                        target: '_blank'
-                    });
-                }
-            });
-        });
+
 
         /**
          * 报表功能

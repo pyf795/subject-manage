@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace=绑定一个对应的Dao/Mapper接口-->
+<mapper namespace="com.subjectmanage.mapper.ScoreMapper">
+
+    <select id="getScoreByStudent" parameterType="int" resultMap="ScoreInfo">
+        select * from score WHERE  student_id = #{student_id}
+    </select>
+
+
+    <select id="selectAll"  resultMap="ScoreInfo">
+        select * from topic limit #{startIndex},#{pageSize}
+    </select>
+
+    <resultMap id="ScoreInfo" type="com.subjectmanage.beans.Score">
+        <result property="topic_id" column="topic_id"/>
+        <result property="student_id" column="student_id"/>
+        <result property="group_id" column="group_id"/>
+        <association property="topic" column="topic_id" javaType="com.subjectmanage.beans.Topic" select="com.subjectmanage.mapper.TopicMapper.getTopicById"/>
+        <association property="student" column="student_id" javaType="com.subjectmanage.beans.Student" select="com.subjectmanage.mapper.StudentMapper.getStudentById"/>
+    </resultMap>
+
+    <select id="getTotal"  resultType="int">
+        select count(*) from score where student_id = #{student_id}
+    </select>
+
+
+    <insert id="addScore" >
+        insert into score(student_id, topic_id, group_id, score)
+            value (#{student_id},#{topic_id},#{group_id},#{score})
+    </insert>
+
+    <update id="updateScore" >
+        update score
+        <set>
+            <if test="student_id">
+                student_id = #{student_id},
+            </if>
+            <if test="topic_id!=null">
+                topic_id = #{topic_id},
+            </if>
+            <if test="group_id!=null">
+                group_id = #{group_id}
+            </if>
+            <if test="score!=null">
+                score = #{score}
+            </if>
+        </set>
+        where topic_id = #{topic_id} and student_id = #{student_id}
+    </update>
+
+    <delete id="deleteScore">
+        delete from score where topic_id = #{topic_id} and student_id = #{student_id}
+    </delete>
+
+
+</mapper>
