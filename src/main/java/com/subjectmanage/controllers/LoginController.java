@@ -188,7 +188,7 @@ public class LoginController {
             Map<String,Object>homeInfo=new HashMap<>();
             homeInfo.put("title","首页");
             homeInfo.put("icon","fa fa-home");
-            homeInfo.put("href","page/welcome-1.html");
+            homeInfo.put("href","/toWelcome");
             map.put("homeInfo",homeInfo);
             Map<String,Object>logoInfo=new HashMap<>();
             logoInfo.put("title","综设管理系统");
@@ -216,7 +216,7 @@ public class LoginController {
             Map<String,Object>dInfo=new HashMap<>();
             dInfo.put("title","查看个人发布课题");
             dInfo.put("icon","fa fa-window-maximize");
-            dInfo.put("href","");
+            dInfo.put("href","/topic/teach/toTopicList");
             childInfo.add(dInfo);
 
             Map<String,Object>eInfo=new HashMap<>();

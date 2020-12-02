@@ -24,6 +24,16 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
+    public List<Topic> selectTopicByTid(int teacher_id, int startIndex, int pageSize) {
+        return topicMapper.selectTopicByTid(teacher_id, startIndex, pageSize);
+    }
+
+    @Override
+    public int getTotalByTid(int teacher_id) {
+        return topicMapper.getTotalByTid(teacher_id);
+    }
+
+    @Override
     public int getTotal(){
         return topicMapper.getTotal();
     }
@@ -36,6 +46,16 @@ public class TopicServiceImpl implements TopicService {
     @Override
     public int getSearchTotal(String headline, String type, String grade,String teacher_name) {
         return topicMapper.getSearchTotal(headline, type, grade,teacher_name);
+    }
+
+    @Override
+    public List<Topic> searchTeachTopics(String headline, String type, String grade, int teacher_id, int startIndex, int pageSize) {
+        return topicMapper.searchTeachTopics(headline, type, grade, teacher_id, startIndex, pageSize);
+    }
+
+    @Override
+    public int getTeachSearchTotal(String headline, String type, String grade, int teacher_id) {
+        return topicMapper.getTeachSearchTotal(headline, type, grade, teacher_id);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.subjectmanage.controllers;
 
 import com.subjectmanage.beans.Group;
 import com.subjectmanage.beans.Student;
+import com.subjectmanage.beans.Teacher;
 import com.subjectmanage.services.FileService;
 import com.subjectmanage.services.FileServiceImpl;
 import com.subjectmanage.services.GroupServiceImpl;
@@ -36,6 +37,12 @@ public class FileController {
         return "stufile-upload";
     }
 
+    @RequestMapping("/teach/fileuploadPage")
+    public String toteachfileuploadPage(@RequestParam int topic_id,Model model){
+        model.addAttribute("topic_id",topic_id);
+        return "teachfile-upload";
+    }
+
   /*  @RequestMapping("/stu/fileuploadPage")
     public String tofileuploadPage(Model model,@RequestParam int group_id){
         model.addAttribute("group_id",group_id);
@@ -55,6 +62,22 @@ public class FileController {
         }else{
             session.setAttribute("filemsg","上传文件失败！");
             return "redirect:/index#/topic/chosenTopic";
+        }
+
+    }
+
+    @PostMapping("/teach/uploadFile")
+    public String uploadMissionFile(HttpSession session,HttpServletRequest request, @RequestParam String fileType,
+                             @RequestParam int topic_id,
+                             @RequestParam List<MultipartFile> uploadfile) {
+
+        Teacher teacher = (Teacher)session.getAttribute("loginUser");
+        if(fileService.uploadMissionFile(fileType,teacher,topic_id,uploadfile)){
+            session.setAttribute("filemsg","文件上传成功！");
+            return "redirect:/index#/topic/teach/toTopicList";
+        }else{
+            session.setAttribute("filemsg","上传文件失败！");
+            return "redirect:/index#/topic/teach/toTopicList";
         }
 
     }

@@ -24,6 +24,14 @@
         select * from topic limit #{startIndex},#{pageSize}
     </select>
 
+    <select id="selectTopicByTid"  resultMap="TopicWithTeacher">
+        select * from topic where teacher_id = #{teacher_id} limit #{startIndex},#{pageSize}
+    </select>
+
+    <select id="getTotalByTid"  resultType="int">
+        select count(*) from topic where teacher_id = #{teacher_id}
+    </select>
+
     <resultMap id="TopicWithTeacher" type="com.subjectmanage.beans.Topic">
         <result property="topic_id" column="topic_id"/>
         <result property="teacher_id" column="teacher_id"/>
@@ -72,9 +80,48 @@
          limit #{startIndex},#{pageSize}
     </select>
 
-    <insert id="addTopic" >
-        insert into topic (teacher_id, headline, release_time, topic_url, type,content,grade)
-            value (#{teacher_id},#{headline},#{release_time},#{topic_url},#{type},#{content},#{grade})
+
+
+    <select id="getTeachSearchTotal"  resultType="int">
+        select count(*) from topic
+        <where>
+            <if test="teacher_id!=null">
+                teacher_id = #{teacher_id}
+            </if>
+            <if test="headline!=null">
+               and headline like CONCAT('%',#{headline},'%')
+            </if>
+            <if test="type!=null">
+                and type like CONCAT('%',#{type},'%')
+            </if>
+            <if test="grade!=null">
+                and grade = #{grade}
+            </if>
+        </where>
+    </select>
+
+    <select id="searchTeachTopics" resultMap="TopicWithTeacher">
+        select * from topic
+        <where>
+            <if test="teacher_id!=null">
+                teacher_id = #{teacher_id}
+            </if>
+            <if test="headline!=null">
+                and headline like CONCAT('%',#{headline},'%')
+            </if>
+            <if test="type!=null">
+                and type like CONCAT('%',#{type},'%')
+            </if>
+            <if test="grade!=null">
+                and grade = #{grade}
+            </if>
+        </where>
+        limit #{startIndex},#{pageSize}
+    </select>
+
+    <insert id="addTopic" useGeneratedKeys="true" keyProperty="topic_id" >
+        insert into topic (teacher_id, headline, release_time, file_id, type,content,grade,teacher_name)
+            value (#{teacher_id},#{headline},#{release_time},#{file_id},#{type},#{content},#{grade},#{teacher_name})
     </insert>
 
     <update id="updateTopic" >
@@ -88,19 +135,22 @@
                     headline = #{headline},
                 </if>
                 <if test="release_time!=null">
-                    release_time = #{release_time}
+                    release_time = #{release_time},
                 </if>
-                <if test="topic_url!=null">
-                    topic_url = #{topic_url}
+                <if test="file_id!=null">
+                    file_id = #{file_id},
                 </if>
                 <if test="type!=null">
-                    type = #{type}
+                    type = #{type},
                 </if>
                 <if test="content!=null">
-                    content = #{content}
+                    content = #{content},
                 </if>
                 <if test="grade!=null">
-                    grade = #{grade}
+                    grade = #{grade},
+                </if>
+                <if test="teacher_name!=null">
+                    teacher_name = #{teacher_name}
                 </if>
 
 

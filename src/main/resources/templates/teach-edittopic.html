@@ -1,0 +1,87 @@
+<div class="layuimini-main" xmlns:th="http://www.thymeleaf.org">
+
+    <form id="choose" th:action="@{/topic/teach/edit}" method="post">
+        <div class="layui-form layuimini-form">
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <input type="hidden" name="topic_id" readonly th:value="${topic_id}" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label required">课题标题</label>
+                <div class="layui-input-block">
+                    <input type="text" name="headline" required  th:value="${headline}" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label required">课题类型</label>
+                <div class="layui-input-block">
+                    <input type="text" name="type" required  th:value="${type}"  class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">课题年级</label>
+                <div class="layui-input-block" style="width: 300px">
+                    <select id="grade" name="grade" required  >
+                        <option th:value="${grade}" th:text="${grade}"></option>
+                        <option value="大一">大一</option>
+                        <option value="大二">大二</option>
+                        <option value="大三">大三</option>
+                    </select>
+                </div>
+               <!-- <div class="layui-input-block">
+                    <input type="text" name="grade"  th:value="${grade}" class="layui-input">
+                </div>-->
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">课题简介</label>
+                <div class="layui-input-block">
+                    <textarea name="content" class="layui-textarea"  th:text="${content}"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item" th:each="group, State : ${groupList}">
+                <label class="layui-form-label" th:text="${State.index}+'号课题小组'"></label>
+                <p>只可编辑当前人数为0的小组(容量置0将删除该小组)</p>
+                <div class="layui-input-block" >
+                    <input type="hidden" th:if="${group.current_numbers}==0" th:name="'group'+${State.index}" th:value="${group.group_id}">
+                    <input type="number" max="6" min="4" oninput="if(value>6) value=6;if(value<4) value=0;"
+                           th:name="'volume'+${State.index}" required  th:if="${group.current_numbers}==0" th:value="${group.volume}" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-normal" lay-submit lay-filter="save">保存</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>
+<script>
+    layui.use(['form', 'table'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            table = layui.table,
+            $ = layui.$;
+
+        /**
+         * 初始化表单，要加上，不然刷新部分组件可能会不加载
+         */
+        form.render();
+
+        // 当前弹出层，防止ID被覆盖
+        var parentIndex = layer.index;
+
+        //监听提交
+        form.on('submit(save)', function (data) {
+            data = data.field;
+            if (data.group_id == 'unselect') {
+                layer.msg('未选择小组！');
+                return false;
+            }
+            return true;
+        });
+
+    });
+</script>

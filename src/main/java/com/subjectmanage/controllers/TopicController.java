@@ -19,8 +19,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/topic")
@@ -37,6 +38,19 @@ public class TopicController {
 
     @Autowired
     private ScoreServiceImpl scoreService;
+
+    @Autowired
+    private FileServiceImpl fileService;
+
+    @RequestMapping("/teach/toTopicList")
+    public String toteachTopicList(){
+        return "teachtopic";
+    }
+
+    @RequestMapping("/teach/addTopicPage")
+    public String toaddTopicPage(){
+        return "teach-addtopic";
+    }
 
     @RequestMapping("/toTopicList")
     public String toTopicList(){
@@ -84,7 +98,10 @@ public class TopicController {
     @RequestMapping("/chooseTopic")//只有学生有
     public String chooseTopic(@RequestParam int topic_id, @RequestParam int group_id, HttpSession session){
 
-
+        String user_type = session.getAttribute("user_type").toString();
+            if(!user_type.equals("学生")){
+                session.setAttribute("tmsg","选择失败！没有权限");
+            }
             Student loginUser =(Student) session.getAttribute("loginUser");
 
             Group group = groupService.getGroupById(group_id);
@@ -110,7 +127,8 @@ public class TopicController {
             throws ServletException, IOException {
 
         Topic topic = topicService.getTopicWithGroupById(topic_id);
-        String url = topic.getTopic_url();
+        File file = fileService.getFileById(topic.getFile_id());
+        String url = file.getFile_url();
         Path path = Paths.get("src/main/resources/static/",url);
         String filename=path.toString();
         String downFilename=filename.substring(filename.lastIndexOf("\\")+1);//要下载的文件名称
@@ -170,4 +188,155 @@ public class TopicController {
         return LayuiTableData.layData(count,scoreList);
     }
 
+
+
+
+    @RequestMapping("/teach/getTopicList")
+    @ResponseBody
+    public LayuiTableData teachtopicList(@RequestParam int page,@RequestParam int limit,HttpSession session){
+
+        Teacher loginUser = (Teacher)session.getAttribute("loginUser");
+        //处理分页开始
+
+        int startIndex = (page-1)*limit;
+        List<Topic> topicList = topicService.selectTopicByTid(loginUser.getTeacher_id(),startIndex,limit);
+        int count = topicService.getTotalByTid(loginUser.getTeacher_id());  //数据总数
+        LayuiTableData layuiTableData = LayuiTableData.layData(count,topicList);//转换成前端需要的数据格式
+        return layuiTableData;
+    }
+
+    @RequestMapping("/teach/searchTopics")
+    @ResponseBody
+    public LayuiTableData teachsearchTopics(@RequestParam String topic_name,@RequestParam String grade,@RequestParam String type,
+                                       @RequestParam int page,@RequestParam int limit,
+                                       HttpSession session){
+        Teacher loginUser = (Teacher)session.getAttribute("loginUser");
+        int startIndex = (page-1)*limit;
+        if(grade.equals("unselect")){
+            grade = null;
+        }
+        List<Topic> topicList = topicService.searchTeachTopics(topic_name,type,grade,loginUser.getTeacher_id(),startIndex,limit); //分页数据
+        int count = topicService.getTeachSearchTotal(topic_name,type,grade,loginUser.getTeacher_id());  //数据总数
+        LayuiTableData layuiTableData = LayuiTableData.layData(count,topicList);//转换成前端需要的数据格式
+        return layuiTableData;
+    }
+
+    @RequestMapping("/teach/deleteTopic")
+    @ResponseBody
+    public String teachdeleteTopic(HttpSession session,@RequestParam int topic_id){
+        int i = topicService.deleteTopic(topic_id);
+        if(i>0){
+            return "success";
+        }
+        return "false";
+    }
+
+
+    @RequestMapping("/teach/editTopic")
+    public String teachEditTopic(@RequestParam int topic_id,Model model){
+        Topic topic = topicService.getTopicWithGroupById(topic_id);
+        model.addAttribute("topic_id",topic.getTopic_id());
+        model.addAttribute("headline",topic.getHeadline());
+        model.addAttribute("groupList",topic.getGroupList());
+        model.addAttribute("type",topic.getType());
+        model.addAttribute("content",topic.getContent());
+        model.addAttribute("grade",topic.getGrade());
+        return "teach-edittopic";
+    }
+
+    @RequestMapping("/teach/edit")
+    public String EditTopic(@RequestParam int topic_id,@RequestParam String headline,@RequestParam String grade,
+                            @RequestParam String type, @RequestParam String content,
+                            Integer group0,Integer group1,Integer group2,Integer group3,
+                            Integer volume0,Integer volume1,Integer volume2,Integer volume3,
+                            HttpSession session){
+        Topic topic = topicService.getTopicWithGroupById(topic_id);
+        topic.setHeadline(headline);
+        topic.setContent(content);
+        topic.setGrade(grade);
+        topic.setType(type);
+        topicService.updateTopic(topic);
+        if(group0!=null){
+            if(volume0>0){
+                update(volume0,group0);
+            }else {
+                groupService.deleteGroup(group0);
+            }
+        }
+        if(group1!=null){
+            if(volume1>0){
+                update(volume1,group1);
+            }else {
+                groupService.deleteGroup(group1);
+            }
+    }
+        if(group2!=null){
+            if(volume0>2){
+                update(volume2,group2);
+            }else {
+                groupService.deleteGroup(group2);
+            }
+        }
+        if(group3!=null){
+            if(volume0>0){
+                update(volume3,group3);
+            }else {
+                groupService.deleteGroup(group3);
+            }
+        }
+
+        return "redirect:/index#/topic/teach/toTopicList";
+    }
+
+
+    private void update(Integer volume,int group_id){
+        Group group = groupService.getGroupById(group_id);
+        group.setVolume(volume);
+        groupService.updateGroup(group);
+    }
+
+    @RequestMapping("/teach/add")
+    public String addTopic(@RequestParam String headline,@RequestParam String grade,@RequestParam String type,
+                           @RequestParam String content,Integer group0,Integer group1,Integer group2,Integer group3
+                           ,HttpSession session){
+        Teacher loginUser = (Teacher)session.getAttribute("loginUser");
+        int teacher_id = loginUser.getTeacher_id();
+        String teacher_name = loginUser.getTeacher_name();
+        Date date=new Date();
+        SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+         Topic topic = new Topic();
+         topic.setHeadline(headline);
+         topic.setContent(content);
+         topic.setTeacher_id(teacher_id);
+         topic.setGrade(grade);
+         topic.setTeacher_name(teacher_name);
+         topic.setRelease_time(simpleDate.format(date));
+         topic.setType(type);
+         topicService.addTopic(topic);//添加topic
+
+
+        if(group0!=null){
+           add(group0,topic.getTopic_id());
+        }
+        if(group1!=null){
+            add(group0,topic.getTopic_id());
+        }
+        if(group2!=null){
+            add(group0,topic.getTopic_id());
+        }
+        if(group3!=null){
+            add(group0,topic.getTopic_id());
+        }
+
+
+        return "redirect:/index#/topic/teach/toTopicList";
+    }
+
+    private void add(Integer volume,int topic_id){
+        Group group = new Group();
+        group.setCurrent_numbers(0);
+        group.setTopic_id(topic_id);
+        group.setVolume(volume);
+        groupService.addGroup(group);
+    }
 }

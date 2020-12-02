@@ -3,9 +3,12 @@ package com.subjectmanage.services;
 
 import com.subjectmanage.beans.File;
 import com.subjectmanage.beans.Group;
+import com.subjectmanage.beans.Teacher;
+import com.subjectmanage.beans.Topic;
 import com.subjectmanage.mapper.FileMapper;
 import com.subjectmanage.mapper.GroupMapper;
 import com.subjectmanage.mapper.StudentMapper;
+import com.subjectmanage.mapper.TopicMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +29,9 @@ public class FileServiceImpl implements FileService {
 
     @Resource
     private GroupMapper groupMapper;
+
+    @Resource
+    private TopicMapper topicMapper;
 
 
     @Override
@@ -104,6 +110,66 @@ public class FileServiceImpl implements FileService {
                             group.setEfile_id(file1.getFile_id());
                         }
                         groupMapper.updateGroup(group);
+                        return true;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
+                }
+
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean uploadMissionFile(String fileType,Teacher teacher, int topic_id, List<MultipartFile> uploadfile) {
+        Date date=new Date();
+        SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String uploader_name = teacher.getTeacher_name();
+
+        Topic topic = topicMapper.getTopicWithGroupById(topic_id);
+
+        if (!uploadfile.isEmpty() && uploadfile.size()>0) {
+            //循环输出上传的文件  MultipartFile 支持传输多个文件
+            for (MultipartFile file : uploadfile) {
+                String path = System.getProperty("user.dir");
+                String realPath = path + "\\src\\main\\resources\\static";
+
+                //String staticPath = ClassUtils.getDefaultClassLoader().getResource("static").getPath();
+                // 获取上传文件的原始名称
+                String originalFilename = file.getOriginalFilename();
+                // 设置上传文件的保存地址目录
+                String urlPath = "file/";
+
+                String savePath = realPath+"/file/";
+                String visitPath = urlPath;
+                java.io.File filePath = new java.io.File(savePath);
+                // 如果保存文件的地址不存在，就先创建目录
+                if (!filePath.exists()) {
+                    filePath.mkdirs();
+                }
+                // 使用UUID重新命名上传的文件名称(上传人_uuid_原始文件名称)
+                String newFilename = uploader_name + "_" + UUID.randomUUID() +
+                        "_" + originalFilename;
+                try {
+                    // 使用MultipartFile接口的方法完成文件上传到指定位置
+                    if(!file.isEmpty()){
+                        file.transferTo(new java.io.File(savePath + newFilename));
+                        File file1 = new File();
+                        file1.setFile_url(visitPath+newFilename);
+                        file1.setType(fileType);
+                        file1.setHeadline(originalFilename);
+                        file1.setRelease_time(simpleDate.format(date));
+                        file1.setTopic_id(topic_id);
+                        fileMapper.addFile(file1);
+                        if(topic.getFile_id()!=0){
+                            String url = realPath+fileMapper.getFileById(topic.getFile_id()).getFile_url();
+                            java.io.File deleteFile = new java.io.File(url);
+                            fileMapper.deleteFile(topic.getFile_id());
+                        }
+                        topic.setFile_id(file1.getFile_id());
+                        topicMapper.updateTopic(topic);
                         return true;
                     }
                 } catch (Exception e) {

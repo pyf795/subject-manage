@@ -1,0 +1,115 @@
+<div class="layuimini-main" xmlns:th="http://www.thymeleaf.org">
+
+    <form id="choose" th:action="@{/topic/teach/add}" method="post">
+        <div class="layui-form layuimini-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label required">课题标题</label>
+                <div class="layui-input-block">
+                    <input type="text" name="headline" required  class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label required">课题类型</label>
+                <div class="layui-input-block">
+                    <input type="text" name="type" required  class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">课题年级</label>
+                <div class="layui-input-block" style="width: 300px">
+                    <select id="grade" name="grade" required  >
+                        <option value="unselect">-请选择-</option>
+                        <option value="大一">大一</option>
+                        <option value="大二">大二</option>
+                        <option value="大三">大三</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">课题简介</label>
+                <div class="layui-input-block">
+                    <textarea name="content" class="layui-textarea"  required></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">课题小组（可选）</label>
+                <div class="layui-input-block">
+                   <!-- <input name="" type="button" value="添加小组" onClick="AddElement('text')" />-->
+                    <button type="button" class="layui-btn layui-btn-lg layui-btn-normal" onclick="AddElement()">添加小组</button>
+                    <button type="button" class="layui-btn layui-btn-lg layui-btn-primary" onclick="Reload()">重置</button>
+                </div>
+
+            </div>
+            <div class="layui-form-item" id="groupItem">
+
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-normal" lay-submit lay-filter="choose">发布</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>
+<script>
+    //动态添加小组元素
+    var i=0;
+    function AddElement(){
+        if(i>=4){
+            alert("一个课题最多添加4个小组！");
+            return;
+        }
+        var Tem0=document.getElementById("groupItem");
+        Tem0.innerHTML += ' <label class="layui-form-label">'+(i+1)+'号小组(容量)</label><div class="layui-input-block" style="width: 300px" id="groupInfo'+i+'">' +
+            '                </div>' ;
+        var newInput = document.createElement("input");
+        newInput.type="number";
+        newInput.name="group"+i;
+        newInput.setAttribute("class","layui-input");
+        newInput.setAttribute("max","6");
+        newInput.setAttribute("min","4");
+        newInput.setAttribute("style","width: 300px");
+        newInput.setAttribute("onkeyup","this.value=this.value.replace(/[^\\.\\d]/g,'');");
+        newInput.setAttribute("oninput","if(value>6) value=6;if(value<4) value=4;");
+        Tem0.appendChild(newInput);
+        var newline= document.createElement("br");
+        Tem0.appendChild(newline);
+        i=i+1;
+    }
+    function Reload() {
+        document.getElementById("groupItem").innerHTML = '';
+        i=0;
+    }
+</script>
+<script>
+    layui.use(['form', 'table'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            table = layui.table,
+            $ = layui.$;
+
+
+
+
+        /**
+         * 初始化表单，要加上，不然刷新部分组件可能会不加载
+         */
+        form.render();
+
+        // 当前弹出层，防止ID被覆盖
+        var parentIndex = layer.index;
+
+        //监听提交
+        form.on('submit(choose)', function (data) {
+            data = data.field;
+            if (data.group_id == 'unselect') {
+                layer.msg('未选择小组！');
+                return false;
+            }
+            return true;
+        });
+
+    });
+</script>
