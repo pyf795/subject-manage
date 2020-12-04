@@ -222,13 +222,13 @@ public class LoginController {
             Map<String,Object>eInfo=new HashMap<>();
             eInfo.put("title","课题小组确认管理");
             eInfo.put("icon","fa fa-window-maximize");
-            eInfo.put("href","");
+            eInfo.put("href","/topic/teach/groupCheck");
             childInfo.add(eInfo);
 
             Map<String,Object>fInfo=new HashMap<>();
             fInfo.put("title","学生课题小组管理");
             fInfo.put("icon","fa fa-window-maximize");
-            fInfo.put("href","");
+            fInfo.put("href","/topic/teach/groupManage");
             childInfo.add(fInfo);
 
 

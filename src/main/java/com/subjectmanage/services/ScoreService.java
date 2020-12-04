@@ -8,6 +8,10 @@ public interface ScoreService {
 
     public List<Score> getScoreByStudent(int student_id);
 
+    public List<Score> getScoreByGroup(int group_id);
+
+    public Score getScore(int group_id,int student_id);
+
     public Score selectAll(int startIndex,int pageSize);
 
     public int getTotal(int student_id);

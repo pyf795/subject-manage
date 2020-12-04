@@ -5,9 +5,18 @@ public class Score {
     private int topic_id;
     private int group_id;
     private int score;
+    private int file_id;
     private Student student;
     private Topic topic;
     private Group group;
+
+    public int getFile_id() {
+        return file_id;
+    }
+
+    public void setFile_id(int file_id) {
+        this.file_id = file_id;
+    }
 
     public Student getStudent() {
         return student;
@@ -72,6 +81,7 @@ public class Score {
                 ", topic_id=" + topic_id +
                 ", group_id=" + group_id +
                 ", score=" + score +
+                ", file_id=" + file_id +
                 ", student=" + student +
                 ", topic=" + topic +
                 ", group=" + group +

@@ -43,7 +43,7 @@
             <div class="layui-input-block">
                 <select name="group_id" lay-verify="required" >
                     <option value="unselect">--可选择--</option>
-                    <option th:each="group, State : ${groupList}" th:if="${group.current_numbers}<${group.volume}" th:value="${group.group_id}"
+                    <option th:each="group, State : ${groupList}" th:if="${group.current_numbers}<${group.volume} and ${group.status}==0" th:value="${group.group_id}"
                             th:text="'小组'+${group.group_id}+'(当前人数：'+${group.current_numbers}+' 容量：'+${group.volume}+')'">
                     </option>
                 </select>

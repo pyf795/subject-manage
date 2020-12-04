@@ -31,7 +31,7 @@ import java.util.*;
     private GroupServiceImpl groupService;
     @Test
     void topicTest1() {
-       List<Group> groups = groupService.getGroupWithTopic(1);
+       List<Group> groups = groupService.selectTeaGroup(0,1,0,10);
         System.out.println(groups);
     }
 

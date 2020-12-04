@@ -1,14 +1,8 @@
 package com.subjectmanage.services;
 
 
-import com.subjectmanage.beans.File;
-import com.subjectmanage.beans.Group;
-import com.subjectmanage.beans.Teacher;
-import com.subjectmanage.beans.Topic;
-import com.subjectmanage.mapper.FileMapper;
-import com.subjectmanage.mapper.GroupMapper;
-import com.subjectmanage.mapper.StudentMapper;
-import com.subjectmanage.mapper.TopicMapper;
+import com.subjectmanage.beans.*;
+import com.subjectmanage.mapper.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,6 +27,8 @@ public class FileServiceImpl implements FileService {
     @Resource
     private TopicMapper topicMapper;
 
+    @Resource
+    private ScoreMapper scoreMapper;
 
     @Override
     public File getFileById(int file_id) {
@@ -170,6 +166,72 @@ public class FileServiceImpl implements FileService {
                         }
                         topic.setFile_id(file1.getFile_id());
                         topicMapper.updateTopic(topic);
+                        return true;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
+                }
+
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean uploadScoreFile(String fileType, Teacher teacher, int group_id, int score, List<MultipartFile> uploadfile) {
+        Date date=new Date();
+        SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String uploader_name = teacher.getTeacher_name();
+
+        Group group = groupMapper.getGroupWithTopic(group_id).get(0);
+        List<Student> studentList = group.getStudentList();
+        if (!uploadfile.isEmpty() && uploadfile.size()>0) {
+            //循环输出上传的文件  MultipartFile 支持传输多个文件
+            for (MultipartFile file : uploadfile) {
+                String path = System.getProperty("user.dir");
+                String realPath = path + "\\src\\main\\resources\\static";
+
+                //String staticPath = ClassUtils.getDefaultClassLoader().getResource("static").getPath();
+                // 获取上传文件的原始名称
+                String originalFilename = file.getOriginalFilename();
+                // 设置上传文件的保存地址目录
+                String urlPath = "file/";
+
+                String savePath = realPath+"/file/";
+                String visitPath = urlPath;
+                java.io.File filePath = new java.io.File(savePath);
+                // 如果保存文件的地址不存在，就先创建目录
+                if (!filePath.exists()) {
+                    filePath.mkdirs();
+                }
+                // 使用UUID重新命名上传的文件名称(上传人_uuid_原始文件名称)
+                String newFilename = uploader_name + "_" + UUID.randomUUID() +
+                        "_" + originalFilename;
+                try {
+                    // 使用MultipartFile接口的方法完成文件上传到指定位置
+                    if(!file.isEmpty()){
+                        file.transferTo(new java.io.File(savePath + newFilename));
+                        File file1 = new File();
+                        file1.setFile_url(visitPath+newFilename);
+                        file1.setType(fileType);
+                        file1.setHeadline(originalFilename);
+                        file1.setRelease_time(simpleDate.format(date));
+                        file1.setTopic_id(group.getTopic_id());
+                        file1.setGroup_id(group_id);
+                        fileMapper.addFile(file1);
+                        System.out.println(file1.getFile_id());
+                            for(int i=0;i<studentList.size();i++){
+                                Score score1 = new Score();
+                                score1.setFile_id(file1.getFile_id());
+                                score1.setGroup_id(group_id);
+                                score1.setTopic_id(group.getTopic_id());
+                                score1.setStudent_id(studentList.get(i).getStudent_id());
+                                score1.setScore(score);
+                                scoreMapper.addScore(score1);
+                            }
+                            group.setStatus(2);//置小组状态为2（已经评分）
+                            groupMapper.updateGroup(group);
                         return true;
                     }
                 } catch (Exception e) {

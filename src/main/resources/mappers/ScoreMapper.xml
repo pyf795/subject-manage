@@ -9,6 +9,14 @@
         select * from score WHERE  student_id = #{student_id}
     </select>
 
+    <select id="getScoreByGroup" parameterType="int" resultMap="ScoreInfo">
+        select * from score WHERE  group_id = #{group_id}
+    </select>
+
+    <select id="getScore"  resultMap="ScoreInfo">
+        select * from score WHERE  group_id = #{group_id} and student_id = #{student_id}
+    </select>
+
 
     <select id="selectAll"  resultMap="ScoreInfo">
         select * from topic limit #{startIndex},#{pageSize}
@@ -28,8 +36,8 @@
 
 
     <insert id="addScore" >
-        insert into score(student_id, topic_id, group_id, score)
-            value (#{student_id},#{topic_id},#{group_id},#{score})
+        insert into score(student_id, topic_id, group_id, score,file_id)
+            value (#{student_id},#{topic_id},#{group_id},#{score},#{file_id})
     </insert>
 
     <update id="updateScore" >

@@ -42,11 +42,11 @@
             </div>
             <div class="layui-form-item" th:each="group, State : ${groupList}">
                 <label class="layui-form-label" th:text="${State.index}+'号课题小组'"></label>
-                <p>只可编辑当前人数为0的小组(容量置0将删除该小组)</p>
+                <p>只可编辑当前人数为0的未确认小组(容量置0将删除该小组)</p>
                 <div class="layui-input-block" >
                     <input type="hidden" th:if="${group.current_numbers}==0" th:name="'group'+${State.index}" th:value="${group.group_id}">
                     <input type="number" max="6" min="4" oninput="if(value>6) value=6;if(value<4) value=0;"
-                           th:name="'volume'+${State.index}" required  th:if="${group.current_numbers}==0" th:value="${group.volume}" class="layui-input">
+                           th:name="'volume'+${State.index}" required  th:if="${group.current_numbers}==0&&${group.status}==0" th:value="${group.volume}" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">

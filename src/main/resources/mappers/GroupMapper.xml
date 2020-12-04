@@ -13,6 +13,10 @@
         select * from `group` WHERE group_id = #{group_id}
     </select>
 
+    <select id="getUncheckGroup" resultMap="GroupWithTopic">
+        select * from `group` WHERE group_id = #{group_id} and status = #{status}
+    </select>
+
     <!--<association property="mfile" column="mfile_id" javaType="com.subjectmanage.beans.File" select="com.subjectmanage.mapper.TopicMapper.getFileById"/>
         <association property="efile" column="efile_id" javaType="com.subjectmanage.beans.File" select="com.subjectmanage.mapper.TopicMapper.getFileById"/>-->
     <resultMap id="GroupWithTopic" type="com.subjectmanage.beans.Group">
@@ -20,6 +24,7 @@
         <result property="topic_id" column="topic_id"/>
         <association property="mfile" column="mfile_id" javaType="com.subjectmanage.beans.File" select="com.subjectmanage.mapper.FileMapper.getFileById"/>
         <association property="efile" column="efile_id" javaType="com.subjectmanage.beans.File" select="com.subjectmanage.mapper.FileMapper.getFileById"/>
+        <collection property="studentList" javaType="ArrayList" ofType="com.subjectmanage.beans.Student" select="com.subjectmanage.mapper.StudentMapper.getStudentListByGroup" column="group_id"/>
         <collection property="topic" javaType="com.subjectmanage.beans.Topic"  select="com.subjectmanage.mapper.TopicMapper.getTopicById" column="topic_id"/>
     </resultMap>
 
@@ -37,9 +42,33 @@
         select * from `group` limit #{startIndex},#{pageSize}
     </select>
 
+    <select id="selectTeaGroup"  resultMap="GroupWithTopic">
+        select * from `group` where status=#{status} and topic_id in (
+             select topic_id from topic where teacher_id = #{teacher_id}
+            ) limit #{startIndex},#{pageSize}
+    </select>
+
+    <select id="selectTeaGroup1"  resultMap="GroupWithTopic">
+        select * from `group` where status!=#{status} and topic_id in (
+            select topic_id from topic where teacher_id = #{teacher_id}
+        ) limit #{startIndex},#{pageSize}
+    </select>
+
+    <select id="selectTeaGroupTotal"  resultType="int">
+        select count(*) from `group` where status=#{status} and topic_id in (
+            select topic_id from topic where teacher_id = #{teacher_id}
+        )
+    </select>
+
+    <select id="selectTeaGroup1Total"  resultType="int">
+        select count(*) from `group` where status!=#{status} and topic_id in (
+            select topic_id from topic where teacher_id = #{teacher_id}
+        )
+    </select>
+
     <insert id="addGroup" >
-        insert into `group` (group_id, topic_id, current_numbers, volume,mfile_id,efile_id)
-            value (#{group_id},#{topic_id},#{current_numbers},#{volume},#{mfile_id},#{efile_id})
+        insert into `group` (group_id, topic_id, current_numbers, volume,mfile_id,efile_id,status)
+            value (#{group_id},#{topic_id},#{current_numbers},#{volume},#{mfile_id},#{efile_id},#{status})
     </insert>
 
     <update id="updateGroup" >
@@ -59,7 +88,10 @@
                     mfile_id = #{mfile_id},
                 </if>
                 <if test="efile_id!=null">
-                    efile_id = #{efile_id}
+                    efile_id = #{efile_id},
+                </if>
+                <if test="status!=null">
+                    status = #{status}
                 </if>
 
         </set>

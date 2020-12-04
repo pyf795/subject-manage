@@ -1,0 +1,61 @@
+<div class="layuimini-main" xmlns:th="http://www.thymeleaf.org">
+
+    <form id="choose" th:action="@{/topic/teach/uploadScore}" method="post" enctype="multipart/form-data">
+      <div class="layui-form layuimini-form">
+          <div class="layui-form-item">
+              <div class="layui-input-block">
+                  <input lay-verify="required" type="hidden" name="group_id" th:value="${group_id}">
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <div class="layui-input-block">
+                  <input lay-verify="required" type="hidden" name="topic_id" th:value="${topic_id}">
+              </div>
+          </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">评分表上传</label>
+            <div class="layui-input-block">
+                <input lay-verify="required" type="file" name="uploadfile"  class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">评分</label>
+            <div class="layui-input-block">
+                <input lay-verify="required" type="number" min="0" max="100"  oninput="if(value>100) value=100;if(value<0) value=0;"
+                      name="score"  class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="score">保存评分</button>
+                <p>评分一经保存无法修改（有问题请联系管理员）</p>
+            </div>
+
+        </div>
+      </div>
+    </form>
+
+</div>
+<script>
+    layui.use(['form', 'table'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            table = layui.table,
+            $ = layui.$;
+
+        /**
+         * 初始化表单，要加上，不然刷新部分组件可能会不加载
+         */
+        form.render();
+
+        // 当前弹出层，防止ID被覆盖
+        var parentIndex = layer.index;
+
+        //监听提交
+        form.on('submit(score)', function (data) {
+            data = data.field;
+            return true;
+        });
+
+    });
+</script>

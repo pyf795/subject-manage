@@ -13,6 +13,15 @@ public class Group {
     private int efile_id;
     private File mfile;
     private File efile;
+    private int status;
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
     public int getMfile_id() {
         return mfile_id;
@@ -108,6 +117,7 @@ public class Group {
                 ", efile_id=" + efile_id +
                 ", mfile=" + mfile +
                 ", efile=" + efile +
+                ", status=" + status +
                 '}';
     }
 }

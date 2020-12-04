@@ -6,6 +6,7 @@
 
         <script type="text/html" id="currentTableBar">
             <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="upload">上传文档</a>
+            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="cancel">取消选择</a>
             <a style="color: red;" th:text="${session.filemsg}"></a>
         </script>
 
@@ -56,6 +57,15 @@
                         {field: 'type', width: 200, title: '类型',templet: function (group) {
                                 return group.topic.type;
                             }},
+                        {field: 'status', width: 200, title: '状态',templet: function (group) {
+                                if(group.status ===0){
+                                    return "未确认";
+                                }else if(group.status===1){
+                                    return "已确认";
+                                }else if(group.status===2){
+                                    return "已评分";
+                                }
+                            }},
                         {title: '操作', minWidth: 200, toolbar: '#currentTableBar', align: "center"}
                     ]
                 ],
@@ -69,11 +79,15 @@
         table.on('tool(currentTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event === 'upload') {
-
-                console.log(data.topic_id);
-
+                if(data.status===0){
+                    layer.msg("小组未被确认！无法上传文档！");
+                    return;
+                }
+                if(data.status===2){
+                    layer.msg("小组已经评分！无法上传文档！");
+                    return;
+                }
                 var content = miniPage.getHrefContent('/file/stu/fileuploadPage');
-                console.log(content);
                 var openWH = miniPage.getOpenWidthHeight();
 
                 var index = layer.open({
@@ -88,6 +102,41 @@
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
+                });
+            }
+            else if(obj.event === 'cancel'){
+
+                if(data.status===1){
+                    layer.msg("小组已被确认！无法取消！");
+                    return;
+                }
+
+                layer.confirm('确定取消吗?', function (index) {
+
+                    $.ajax({
+                        url: "/topic/stu/cancel",
+                        type: "post",
+                        async:false,
+                        // 定义发送请求的数据格式为JSON字符串
+                        contentType: "application/json;charset=UTF-8",
+                        //定义回调响应的数据格式为 JSON 字符串,该属性可以省略
+                        dataType: "json",
+                        //成功响应的结果
+                        success: function (data) {
+                            if(data.result==="success"){
+                                obj.del();
+                                layer.msg("取消成功！");
+                                setTimeout("window.location.reload()",2000);
+                            }else{
+                                layer.msg("取消失败！");
+                            }
+                        },
+                        error: function(e) {
+                            var res = $.parseJSON(e.responseText);
+                            layer.msg(res.msg);
+                        }
+                    });
+                    layer.close(index);
                 });
             }
         });

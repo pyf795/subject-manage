@@ -20,6 +20,16 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     @Override
+    public List<Score> getScoreByGroup(int group_id) {
+        return scoreMapper.getScoreByGroup(group_id);
+    }
+
+    @Override
+    public Score getScore(int group_id, int student_id) {
+        return scoreMapper.getScore(group_id, student_id);
+    }
+
+    @Override
     public Score selectAll(int startIndex, int pageSize) {
         return scoreMapper.selectAll(startIndex,pageSize);
     }

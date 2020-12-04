@@ -25,6 +25,11 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public List<Group> getUncheckGroup(int group_id, int status) {
+        return groupMapper.getUncheckGroup(group_id, status);
+    }
+
+    @Override
     public List<Group> getGroupListByTopicId(int topic_id) {
         return groupMapper.getGroupListByTopicId(topic_id);
     }
@@ -32,6 +37,26 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public List<Group> selectAll(int startIndex, int pageSize) {
         return groupMapper.selectAll(startIndex,pageSize);
+    }
+
+      @Override
+    public List<Group> selectTeaGroup(int status, int teacher_id, int startIndex, int pageSize) {
+        return groupMapper.selectTeaGroup(status, teacher_id, startIndex, pageSize);
+    }
+
+    @Override
+    public List<Group> selectTeaGroup1(int status, int teacher_id, int startIndex, int pageSize) {
+        return groupMapper.selectTeaGroup1(status, teacher_id, startIndex, pageSize);
+    }
+
+    @Override
+    public int selectTeaGroupTotal(int status, int teacher_id, int startIndex, int pageSize) {
+        return groupMapper.selectTeaGroupTotal(status, teacher_id, startIndex, pageSize);
+    }
+
+    @Override
+    public int selectTeaGroup1Total(int status, int teacher_id, int startIndex, int pageSize) {
+        return groupMapper.selectTeaGroupTotal(status, teacher_id, startIndex, pageSize);
     }
 
     @Override

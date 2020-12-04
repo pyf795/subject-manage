@@ -38,18 +38,14 @@
             </div>
         </fieldset>
 
-        <script type="text/html" id="toolbarDemo">
-            <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>
-            </div>
-        </script>
 
         <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
 
         <script type="text/html" id="currentTableBar">
-            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
-            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
-            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="upload">上传任务书</a>
+            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="detail">详情</a>
+            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="score">评分</a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="mdownload">下载中期文档</a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="edownload">下载期末文档</a>
         </script>
 
     </div>
@@ -64,8 +60,7 @@
 
         table.render({
             elem: '#currentTableId',
-            url:'/topic/teach/getTopicList',
-            toolbar: '#toolbarDemo',
+            url:'/topic/teach/getCheckedGroupList',
             defaultToolbar: ['filter', 'exports', 'print', {
                 title: '提示',
                 layEvent: 'LAYTABLE_TIPS',
@@ -82,17 +77,27 @@
             cols:
             [
                 [
-                {type: "checkbox", width: 50},
-                {field: 'topic_id', width: 200, title: 'ID', sort: true},
-                {field: 'teacher_name', width: 200, title: '课题老师',templet: function (topic) {
-                         return topic.teacher.teacher_name;
+                {field: 'group_id', width: 200, title: 'ID', sort: true},
+                {field: 'headline', width: 200, title: '课题标题',templet: function (group) {
+                         return group.topic.headline;
                     }
                 },
-                {field: 'headline', width: 200, title: '课题标题'},
-                {field: 'grade', width: 200, title: '年级'},
-                {field: 'release_time', width: 200, title: '发布时间'},
-                {field: 'type', width: 200, title: '类型'},
-                {title: '操作', minWidth: 200, toolbar: '#currentTableBar', align: "center"}
+                {field: 'grade', width: 200, title: '年级',templet: function (group) {
+                        return group.topic.grade;
+                    }},
+                {field: 'type', width: 200, title: '类型',templet: function (group) {
+                            return group.topic.type;
+                        }},
+                {field: 'current_numbers', width: 200, title: '小组人数'},
+                {field: 'volume', width: 200, title: '容量'},
+                {field: 'status', width: 200, title: '状态',templet: function (group) {
+                        if(group.status ===1){
+                            return "已确认";
+                        }else if(group.status ===2){
+                            return "已评分";
+                        }
+                    }},
+                {title: '操作', minWidth: 600, toolbar: '#currentTableBar', align: "center"}
                 ]
             ],
             limits: [5, 10, 15, 25, 50, 100],
@@ -121,29 +126,7 @@
             },'data');
         });
 
-        /**
-         * toolbar事件监听
-         */
-        table.on('toolbar(currentTableFilter)', function (obj) {
-            if (obj.event === 'add') {   // 监听添加操作
-                var content = miniPage.getHrefContent('topic/teach/addTopicPage');
-                var openWH = miniPage.getOpenWidthHeight();
 
-                var index = layer.open({
-                    title: '发布课题',
-                    type: 1,
-                    shade: 0.2,
-                    maxmin:true,
-                    shadeClose: true,
-                    area: [openWH[0] + 'px', openWH[1] + 'px'],
-                    offset: [openWH[2] + 'px', openWH[3] + 'px'],
-                    content: content,
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-            }
-        });
 
         //监听表格复选框选择
         table.on('checkbox(currentTableFilter)', function (obj) {
@@ -159,16 +142,13 @@
         });
         table.on('tool(currentTableFilter)', function (obj) {
             var data = obj.data;
-            if (obj.event === 'edit') {
+            if (obj.event === 'detail') {
 
-                console.log(data.topic_id);
-
-                var content = miniPage.getHrefContent('topic/teach/editTopic?topic_id='+data.topic_id);
-                console.log(content);
+                var content = miniPage.getHrefContent('topic/teach/groupDetail?group_id='+data.group_id);
                 var openWH = miniPage.getOpenWidthHeight();
 
                 var index = layer.open({
-                    title: '编辑',
+                    title: '小组详情',
                     type: 1,
                     shade: 0.2,
                     maxmin:true,
@@ -182,48 +162,17 @@
                 });
                 return false;
             }
-            else if (obj.event === 'delete') {
-                layer.confirm('确定删除?', function (index) {
+            else if (obj.event === 'score') {
 
-                    //调用ajax删除
-                    $.ajax({
-                        url: "/topic/teach/deleteTopic?topic_id="+data.topic_id,
-                        type: "post",
-                        async:false,
-                        // 定义发送请求的数据格式为JSON字符串
-                        contentType: "application/json;charset=UTF-8",
-                        //定义回调响应的数据格式为 JSON 字符串,该属性可以省略
-                        dataType: "json",
-                        //成功响应的结果
-                        success: function (data) {
-
-                              if(data.result ==="success"){
-                                  obj.del();
-                                  layer.msg("删除成功！");
-                              }
-                              else {
-                                  layer.msg("删除失败！课题已存在分组！");
-                              }
-
-                        },
-                        error: function(e) {
-                            var res = $.parseJSON(e.responseText);
-                            layer.msg(res.msg);
-                        }
-                    });
-                    layer.close(index);
-                });
-            }
-            else if (obj.event === 'upload') {
-
-                console.log(data.topic_id);
-
-                var content = miniPage.getHrefContent('/file/teach/fileuploadPage?topic_id='+data.topic_id);
-                console.log(content);
+                if(data.status===2){
+                    layer.msg("无法修改评分！有问题请联系管理员！");
+                    return false;
+                }
+                var content = miniPage.getHrefContent('topic/teach/score?group_id='+data.group_id);
                 var openWH = miniPage.getOpenWidthHeight();
 
                 var index = layer.open({
-                    title: '文档上传',
+                    title: '对小组评分',
                     type: 1,
                     shade: 0.2,
                     maxmin:true,
@@ -235,6 +184,13 @@
                 $(window).on("resize", function () {
                     layer.full(index);
                 });
+                return true;
+            }
+            else if (obj.event === 'mdownload') {
+                window.location.href = "/topic/downloadMfile?group_id="+data.group_id;
+            }
+            else if (obj.event === 'edownload') {
+                window.location.href = "/topic/downloadEfile?group_id="+data.group_id;
             }
         });
 
