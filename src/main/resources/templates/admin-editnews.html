@@ -1,0 +1,63 @@
+<div class="layuimini-main" xmlns:th="http://www.thymeleaf.org">
+
+    <form id="choose" th:action="@{/admin/news/editNews}" method="post">
+        <div class="layui-form layuimini-form">
+            <input type="hidden" th:value="${news_id}" name="news_id">
+            <div class="layui-form-item">
+                <label class="layui-form-label required">新闻标题</label>
+                <div class="layui-input-block">
+                    <input type="text" name="news_title" th:value="${news_title}" required  class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label required">日期</label>
+                <div class="layui-input-block">
+                    <input type="date" name="news_date" th:value="${news_date}" required  class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">新闻链接</label>
+                <div class="layui-input-block">
+                    <textarea name="news_url"  class="layui-textarea" th:text="${news_url}"  required></textarea>
+                </div>
+            </div>
+
+
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-normal" lay-submit lay-filter="choose">修改</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+<script>
+    layui.use(['form', 'table'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            table = layui.table,
+            $ = layui.$;
+
+
+
+
+        /**
+         * 初始化表单，要加上，不然刷新部分组件可能会不加载
+         */
+        form.render();
+
+        // 当前弹出层，防止ID被覆盖
+        var parentIndex = layer.index;
+
+        //监听提交
+        form.on('submit(choose)', function (data) {
+            data = data.field;
+            return true;
+        });
+
+    });
+</script>

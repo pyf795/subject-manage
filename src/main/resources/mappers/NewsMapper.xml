@@ -5,6 +5,10 @@
 <!--namespace=绑定一个对应的Dao/Mapper接口-->
 <mapper namespace="com.subjectmanage.mapper.NewsMapper">
 
+    <select id="selectNewsById" resultType="com.subjectmanage.beans.News">
+        select * from news where news_id = #{news_id}
+    </select>
+
     <select id="selectAll"  resultType="com.subjectmanage.beans.News">
         select * from news limit #{startIndex},#{pageSize}
     </select>
@@ -13,5 +17,66 @@
         select count(*) from news
     </select>
 
+    <insert id="addNews">
+        insert into news (news_title, news_url, news_date)
+         value (#{news_title},#{news_url},#{news_date})
+    </insert>
 
+
+    <update id="updateNews" >
+        update news
+        <set>
+
+            <if test="news_title!=null">
+                news_title = #{news_title},
+            </if>
+            <if test="news_url!=null">
+                news_url = #{news_url},
+            </if>
+            <if test="news_date!=null">
+                news_date = #{news_date}
+            </if>
+
+        </set>
+        where news_id = #{news_id}
+    </update>
+
+    <delete id="deleteNews">
+        delete from news where news_id = #{news_id}
+    </delete>
+
+    <delete id="batchdeleteNews" parameterType="int">
+        delete from news
+        where news_id IN
+        <foreach collection="array" item="news_id" open="(" separator="," close=")">
+            #{news_id}
+        </foreach>
+    </delete>
+
+    <select id="searchNews" resultType="com.subjectmanage.beans.News">
+        select * from news
+        <where>
+
+            <if test="news_title!=null">
+                 news_title like CONCAT('%',#{news_title},'%')
+            </if>
+            <if test="news_date!=null">
+                and news_date = #{news_date}
+            </if>
+        </where>
+        limit #{startIndex},#{pageSize}
+    </select>
+
+
+    <select id="searchNewsTotal" resultType="int">
+        select count(*) from news
+        <where>
+            <if test="news_title!=null">
+                news_title like CONCAT('%',#{news_title},'%')
+            </if>
+            <if test="news_date!=null">
+                and news_date = #{news_date}
+            </if>
+        </where>
+    </select>
 </mapper>

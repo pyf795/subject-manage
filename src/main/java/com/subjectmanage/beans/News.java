@@ -1,5 +1,9 @@
 package com.subjectmanage.beans;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
+
 public class News {
     private int news_id;
     private String news_title;

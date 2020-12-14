@@ -5,7 +5,7 @@
 <!--namespace=绑定一个对应的Dao/Mapper接口-->
 <mapper namespace="com.subjectmanage.mapper.GroupMapper">
 
-    <select id="getGroupById" resultType="com.subjectmanage.beans.Group">
+    <select id="getGroupById" resultMap="GroupWithTopic">
         select * from `group` WHERE group_id = #{group_id}
     </select>
 

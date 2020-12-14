@@ -1,0 +1,370 @@
+<style>
+    .welcome .layui-card {border:1px solid #f2f2f2;border-radius:5px;}
+    .welcome .icon {margin-right:10px;color:#1aa094;}
+    .welcome .icon-cray {color:#ffb800 !important;}
+    .welcome .icon-blue {color:#1e9fff !important;}
+    .welcome .icon-tip {color:#ff5722 !important;}
+    .welcome .layuimini-qiuck-module {text-align:center;margin-top:10px}
+    .welcome .layuimini-qiuck-module a i {display:inline-block;width:100%;height:60px;line-height:60px;text-align:center;border-radius:2px;font-size:30px;background-color:#F8F8F8;color:#333;transition:all .3s;-webkit-transition:all .3s;}
+    .welcome .layuimini-qiuck-module a cite {position:relative;top:2px;display:block;color:#666;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;font-size:14px;}
+    .welcome .welcome-module {width:100%;height:210px;}
+    .welcome .panel {background-color:#fff;border:1px solid transparent;border-radius:3px;-webkit-box-shadow:0 1px 1px rgba(0,0,0,.05);box-shadow:0 1px 1px rgba(0,0,0,.05)}
+    .welcome .panel-body {padding:10px}
+    .welcome .panel-title {margin-top:0;margin-bottom:0;font-size:12px;color:inherit}
+    .welcome .label {display:inline;padding:.2em .6em .3em;font-size:75%;font-weight:700;line-height:1;color:#fff;text-align:center;white-space:nowrap;vertical-align:baseline;border-radius:.25em;margin-top:.3em;}
+    .welcome .layui-red {color:red}
+    .welcome .main_btn > p {height:40px;}
+    .welcome .layui-bg-number {background-color:#F8F8F8;}
+    .welcome .layuimini-notice:hover {background:#f6f6f6;}
+    .welcome .layuimini-notice {padding:7px 16px;clear:both;font-size:12px !important;cursor:pointer;position:relative;transition:background 0.2s ease-in-out;}
+    .welcome .layuimini-notice-title,.layuimini-notice-label {padding-right:70px !important;text-overflow:ellipsis !important;overflow:hidden !important;white-space:nowrap !important;}
+    .welcome .layuimini-notice-title {line-height:28px;font-size:14px;}
+    .welcome .layuimini-notice-extra {position:absolute;top:50%;margin-top:-8px;right:16px;display:inline-block;height:16px;color:#999;}
+</style>
+
+<div class="layuimini-container layuimini-page-anim" xmlns:th="http://www.thymeleaf.org">
+    <script>
+        function loadData(pageIndex,pageSize) {
+            var startIndex = (pageIndex-1)*pageSize;
+            $.ajax({
+                url: "/admin/getAnnouncement",
+                data:JSON.stringify({startIndex:startIndex,pageSize:pageSize}),
+                type: "post",
+                async:false,
+                // 定义发送请求的数据格式为JSON字符串
+                contentType: "application/json;charset=UTF-8",
+                //定义回调响应的数据格式为 JSON 字符串,该属性可以省略
+                dataType: "json",
+                //成功响应的结果
+                success: function (data) {
+                    console.log("成功进入！");
+                    console.log(data.aList);
+                    var length = data.aList.length;
+                    var html = '';
+                    for(var i=0;i<length;i++){
+                        html +='<div class="layuimini-notice">' +
+                            '<div class="layuimini-notice-title">'+data.aList[i].a_title+'</div>' +
+                            '<div class="layuimini-notice-extra">'+data.aList[i].release_time+'</div>' +
+                            '<div class="layuimini-notice-content layui-hide">' +data.aList[i].a_content+
+                            '</div>' +
+                            '</div>';
+                    }
+                    document.getElementById("announcement").innerHTML = html;
+                },
+                error: function(e) {
+                    var res = $.parseJSON(e.responseText);
+                    layer.msg(res.msg);
+                }
+            });
+            /**
+             * 查看公告信息
+             **/
+            $('#announcement').on('click', '.layuimini-notice', function () {
+                var title = $(this).children('.layuimini-notice-title').text(),
+                    noticeTime = $(this).children('.layuimini-notice-extra').text(),
+                    content = $(this).children('.layuimini-notice-content').html();
+                var html = '<div style="padding:15px 20px; text-align:justify; line-height: 22px;border-bottom:1px solid #e2e2e2;background-color: #2f4056;color: #ffffff">\n' +
+                    '<div style="text-align: center;margin-bottom: 20px;font-weight: bold;border-bottom:1px solid #718fb5;padding-bottom: 5px"><h4 class="text-danger">' + title + '</h4></div>\n' +
+                    '<div style="font-size: 12px">' + content + '</div>\n' +
+                    '</div>\n';
+                if(content !== null || content !== undefined || content !== ''){
+                    parent.layer.open({
+                        type: 1,
+                        title: '系统公告' + '<span style="float: right;right: 1px;font-size: 12px;color: #b1b3b9;margin-top: 1px">' + noticeTime + '</span>',
+                        area: '300px;',
+                        shade: 0.8,
+                        id: 'layuimini-notice',
+                        btn: ['确定'],
+                        btnAlign: 'c',
+                        moveType: 1,
+                        content: html,
+                        success: function (layero) {
+                            /*   var btn = layero.find('.layui-layer-btn');
+                               btn.find('.layui-layer-btn0').attr({
+                                   href: 'https://gitee.com/zhongshaofa/layuimini',
+                                   target: '_blank'
+                               });*/
+                        }
+                    });
+                }
+
+            });
+        }
+        function loadNews(pageIndex,pageSize) {
+            var startIndex = (pageIndex-1)*pageSize;
+            $.ajax({
+                url: "/admin/getNews",
+                data:JSON.stringify({startIndex:startIndex,pageSize:pageSize}),
+                type: "post",
+                async:false,
+                // 定义发送请求的数据格式为JSON字符串
+                contentType: "application/json;charset=UTF-8",
+                //定义回调响应的数据格式为 JSON 字符串,该属性可以省略
+                dataType: "json",
+                //成功响应的结果
+                success: function (data) {
+                    var length = data.newsList.length;
+                    var html = '';
+                    for(var i=0;i<length;i++){
+                        html +='<div class="layuimini-notice">' +
+                            '<div class="layuimini-notice-title"><a href="'+data.newsList[i].news_url+'">'+data.newsList[i].news_title+'</a></div>' +
+                            '<div class="layuimini-notice-extra">'+data.newsList[i].news_date+'</div>' +
+                            '<div class="layuimini-notice-content layui-hide">' +''+
+                            '</div>' +
+                            '</div>';
+                    }
+                    document.getElementById("news").innerHTML = html;
+                },
+                error: function(e) {
+                    var res = $.parseJSON(e.responseText);
+                    layer.msg(res.msg);
+                }
+            });
+        }
+    </script>
+    <script>
+        layui.use(['form', 'laypage','miniPage','element'], function () {
+            $.ajax({
+                url: "/admin/getAnnouncementTotal",
+                type: "post",
+                async:false,
+                // 定义发送请求的数据格式为JSON字符串
+                contentType: "application/json;charset=UTF-8",
+                //定义回调响应的数据格式为 JSON 字符串,该属性可以省略
+                dataType: "json",
+                //成功响应的结果
+                success: function (data) {
+                    console.log(data.total);
+                    var length = data.total;
+                    var $ = layui.jquery,
+                        laypage = layui.laypage;
+                    laypage.render({
+                        elem: 'page'
+                        ,count: length
+                        ,limit:6
+                        ,jump: function(obj){ //回调函数
+                            var pageIndex = obj.curr;
+                            loadData(pageIndex,6);
+                        }
+                    })
+                },
+                error: function(e) {
+                    var res = $.parseJSON(e.responseText);
+                    layer.msg(res.msg);
+                }
+            });
+            $.ajax({
+                url: "/admin/getNewsTotal",
+                type: "post",
+                async:false,
+                // 定义发送请求的数据格式为JSON字符串
+                contentType: "application/json;charset=UTF-8",
+                //定义回调响应的数据格式为 JSON 字符串,该属性可以省略
+                dataType: "json",
+                //成功响应的结果
+                success: function (data) {
+                    console.log(data.total);
+                    var length = data.total;
+                    var $ = layui.jquery,
+                        laypage = layui.laypage;
+                    laypage.render({
+                        elem: 'npage'
+                        ,count: length
+                        ,limit:6
+                        ,jump: function(obj){ //回调函数
+                            var pageIndex = obj.curr;
+                            loadNews(pageIndex,6);
+                        }
+                    })
+                },
+                error: function(e) {
+                    var res = $.parseJSON(e.responseText);
+                    layer.msg(res.msg);
+                }
+            });
+            }
+        );
+
+    </script>
+    <div class="layuimini-main welcome">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md8">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <div class="layui-card">
+                            <div class="layui-card-header"><i class="fa fa-warning icon"></i>时间/天气</div>
+                            <div class="layui-card-body">
+                                <div class="welcome-module">
+                                    <div class="layui-row layui-col-space10">
+                                        <div class="layui-col-xs12">
+                                            <div class="panel layui-bg-number">
+                                                <div class="panel-body">
+                                                    <div class="panel-title">
+                                                        <span class="label pull-right layui-bg-blue">实时</span>
+                                                        <h2>当地时间</h2>
+                                                    </div>
+                                                    <div class="panel-content">
+                                                        <h1 class="no-margins" id="time"></h1>
+                                                        <!--<small>当前分类总记录数</small>-->
+                                                        <!--setInterval实时显示时间-->
+                                                        <script>
+                                                            function mytime(){
+                                                                var a = new Date();
+                                                                var b = a.toLocaleTimeString();
+                                                                var c = a.toLocaleDateString();
+                                                                document.getElementById("time").innerHTML = c+"&nbsp"+b;
+                                                            }
+                                                            setInterval(function() {mytime()},1000);
+                                                        </script>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-xs12">
+                                            <div class="panel layui-bg-number">
+                                                <div class="panel-body">
+                                                    <div class="panel-title">
+                                                        <span class="label pull-right layui-bg-green">实时</span>
+                                                        <h2>天气</h2>
+                                                    </div>
+                                                    <div class="panel-content">
+                                                        <iframe width="500" height="25" frameborder="0" scrolling="no" hspace="0" src="https://i.tianqi.com/?c=code&id=34"></iframe>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md6">
+                        <div class="layui-card">
+                            <div class="layui-card-header"><i class="fa fa-credit-card icon icon-blue"></i>快捷入口</div>
+                            <div class="layui-card-body">
+                                <div class="welcome-module">
+                                    <div class="layui-row layui-col-space10 layuimini-qiuck">
+                                        <div class="layui-col-xs3 layuimini-qiuck-module">
+                                            <a href="https://www.uestc.edu.cn/"  data-title="学校官网" data-icon="fa fa-globe">
+                                                <i class="fa fa-globe"></i>
+                                                <cite>学校官网</cite>
+                                            </a>
+                                        </div>
+                                        <div class="layui-col-xs3 layuimini-qiuck-module">
+                                            <a href="javascript:;" layuimini-content-href="page/setting.html" data-title="系统设置" data-icon="fa fa-gears">
+                                                <i class="fa fa-gears"></i>
+                                                <cite>系统设置</cite>
+                                            </a>
+                                        </div>
+                                        <div class="layui-col-xs3 layuimini-qiuck-module">
+                                            <a href="javascript:;" layuimini-content-href="topic/toTopicList" data-title="表格示例" data-icon="fa fa-file-text">
+                                                <i class="fa fa-file-text"></i>
+                                                <cite>表格示例</cite>
+                                            </a>
+                                        </div>
+                                        <div class="layui-col-xs3 layuimini-qiuck-module">
+                                            <a href="javascript:;" layuimini-content-href="page/icon.html" data-title="图标列表" data-icon="fa fa-dot-circle-o">
+                                                <i class="fa fa-dot-circle-o"></i>
+                                                <cite>图标列表</cite>
+                                            </a>
+                                        </div>
+                                        <div class="layui-col-xs3 layuimini-qiuck-module">
+                                            <a href="javascript:;" layuimini-content-href="topic/topicScore" data-title="得分" data-icon="fa fa-calendar">
+                                                <i class="fa fa-calendar"></i>
+                                                <cite>得分</cite>
+                                            </a>
+                                        </div>
+                                        <div class="layui-col-xs3 layuimini-qiuck-module">
+                                            <a href="javascript:;" layuimini-content-href="topic/chosenTopic" data-title="已选课题" data-icon="fa fa-hourglass-end">
+                                                <i class="fa fa-hourglass-end"></i>
+                                                <cite>已选课题</cite>
+                                            </a>
+                                        </div>
+                                        <div class="layui-col-xs3 layuimini-qiuck-module">
+                                            <a href="javascript:;" layuimini-content-href="page/button.html" data-title="按钮示例" data-icon="fa fa-snowflake-o">
+                                                <i class="fa fa-snowflake-o"></i>
+                                                <cite>按钮示例</cite>
+                                            </a>
+                                        </div>
+                                        <div class="layui-col-xs3 layuimini-qiuck-module">
+                                            <a href="javascript:;" layuimini-content-href="page/layer.html" data-title="弹出层" data-icon="fa fa-shield">
+                                                <i class="fa fa-shield"></i>
+                                                <cite>弹出层</cite>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="layui-col-md12">
+                        <div class="layui-card">
+                            <div class="layui-card-header"><i class="fa fa-newspaper-o" aria-hidden="true"></i>新闻信息</div>
+                            <div id="news" class="layui-card-body layui-text">
+
+                            </div>
+                            <div id="npage"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-md4">
+
+                <div class="layui-card">
+                    <div class="layui-card-header"><i class="fa fa-bullhorn icon icon-tip"></i>系统公告</div>
+                    <div id="announcement" class="layui-card-body layui-text">
+                    </div>
+                    <div id="page"></div>
+                </div>
+
+                <div class="layui-card">
+                    <div class="layui-card-header"><i class="fa fa-fire icon"></i>学校基本信息</div>
+                    <div class="layui-card-body layui-text">
+                        <table class="layui-table">
+                            <colgroup>
+                                <col width="100">
+                                <col>
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <td>学校名称</td>
+                                <td>
+                                    电子科技大学
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>学校地址</td>
+                                <td>成都市高新区西区西源大道2006号</td>
+                            </tr>
+                            <tr>
+                                <td>主要特色</td>
+                                <td>985 / 211 </td>
+                            </tr>
+                            <tr>
+                                <td>百度百科</td>
+                                <td>
+                                    <a href="https://baike.baidu.com/item/%E7%94%B5%E5%AD%90%E7%A7%91%E6%8A%80%E5%A4%A7%E5%AD%A6/163947?fr=aladdin" target="_blank">点击查看</a><br>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="layui-card">
+                    <div class="layui-card-header"><i class="fa fa-paper-plane-o icon"></i>信息反馈</div>
+                    <div class="layui-card-body layui-text layadmin-text">
+                        <p><i class="fa fa-qq" aria-hidden="true"></i>管理员QQ：895042926</p>
+                        <p><i class="fa fa-phone" aria-hidden="true"></i>管理员电话：13927790473</p>
+                        <p><i class="fa fa-clock-o" aria-hidden="true"></i>值班时间：8:00至18:00</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+

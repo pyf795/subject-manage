@@ -41,16 +41,16 @@
 <body>
 <script>
     $(function () {
-        $("#username").val($.cookie('name'));
-        $("#password").val($.cookie('pwd'));
+        $("#username").val($.cookie('adminname'));
+        $("#password").val($.cookie('adminpwd'));
     });
 </script>
 <div class="layui-container">
     <div class="admin-login-background">
         <div class="layui-form login-form">
-            <form id="login" class="layui-form" th:action="@{/login/userLogin}" method="post">
+            <form id="login" class="layui-form" th:action="@{/admin/login/adminLogin}" method="post">
                 <div class="layui-form-item logo-title">
-                    <h1>登录</h1>
+                    <h1>管理员登录</h1>
                     <h3 style="color: red">[[${msg}]]</h3>
                 </div>
                 <a th:href="@{/index}">已登录？去主页</a>
@@ -68,14 +68,7 @@
                     <label class="layui-icon layui-icon-vercode" ></label>
                     <input type="text" name="captcha" lay-verify="required|captcha" placeholder="图形验证码" autocomplete="off" class="layui-input verification captcha" >
                     <div class="captcha-img">
-                        <img id="captchaPic" th:src="@{/login/getCheckNumber}">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label required">身份</label>
-                    <div class="layui-input-block">
-                        <input type="radio" name="user_type" value="学生" title="学生" checked="">
-                        <input type="radio" name="user_type" value="老师" title="老师">
+                        <img id="captchaPic" th:src="@{/admin/login/getCheckNumber}">
                     </div>
                 </div>
                 <div class="layui-form-item">

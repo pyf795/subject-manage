@@ -9,9 +9,76 @@
         select * from announcement limit #{startIndex},#{pageSize}
     </select>
 
+
+    <select id="selectAnnouncementById" resultType="com.subjectmanage.beans.Announcement">
+        select * from announcement where a_id = #{a_id}
+    </select>
+
     <select id="getTotal"  resultType="int">
         select count(*) from announcement
     </select>
 
+    <insert id="addAnnouncement">
+        insert into announcement (a_id, a_title, a_content,release_time)
+            value (#{a_id},#{a_title},#{a_content},#{release_time})
+    </insert>
+
+
+    <update id="updateAnnouncement" >
+        update announcement
+        <set>
+
+            <if test="a_title!=null">
+                a_title = #{a_title},
+            </if>
+            <if test="a_content!=null">
+                a_content = #{a_content},
+            </if>
+            <if test="release_time!=null">
+                release_time = #{release_time}
+            </if>
+
+        </set>
+        where a_id = #{a_id}
+    </update>
+
+    <delete id="deleteAnnouncement">
+        delete from announcement where a_id = #{a_id}
+    </delete>
+
+    <delete id="batchdeleteAnnouncement" parameterType="int">
+        delete from announcement
+        where a_id IN
+        <foreach collection="array" item="a_id" open="(" separator="," close=")">
+            #{a_id}
+        </foreach>
+    </delete>
+
+    <select id="searchAnnouncement" resultType="com.subjectmanage.beans.Announcement">
+        select * from announcement
+        <where>
+
+            <if test="a_title!=null">
+                a_title like CONCAT('%',#{a_title},'%')
+            </if>
+            <if test="release_time!=null">
+                and release_time = #{release_time}
+            </if>
+        </where>
+        limit #{startIndex},#{pageSize}
+    </select>
+
+
+    <select id="searchAnnouncementTotal" resultType="int">
+        select count(*) from announcement
+        <where>
+            <if test="a_title!=null">
+                a_title like CONCAT('%',#{a_title},'%')
+            </if>
+            <if test="release_time!=null">
+                and release_time = #{release_time}
+            </if>
+        </where>
+    </select>
 
 </mapper>

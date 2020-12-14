@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace=绑定一个对应的Dao/Mapper接口-->
+<mapper namespace="com.subjectmanage.mapper.AdminMapper">
+
+    <select id="selectAdmin" resultType="com.subjectmanage.beans.Admin">
+        select * from admin WHERE admin_id = #{admin_id}
+    </select>
+
+
+    <select id="selectLoginAdmin"  resultType="com.subjectmanage.beans.Admin">
+        select * from admin WHERE admin_num = #{admin_num} and admin_password = #{admin_password}
+    </select>
+
+    <select id="selectAll"  resultType="com.subjectmanage.beans.Admin">
+        select * from admin limit #{startIndex},#{pageSize}
+    </select>
+
+
+    <insert id="addAdmin" useGeneratedKeys="true" keyProperty="admin_id">
+        insert into admin(admin_name, admin_num, admin_password)
+            value (#{admin_name},#{admin_num},#{admin_password})
+    </insert>
+
+    <update id="updateAdmin" >
+        update admin
+        <set>
+            <if test="admin_name!=null">
+                admin_name = #{admin_name},
+            </if>
+            <if test="admin_num!=null">
+                admin_num = #{admin_num},
+            </if>
+            <if test="admin_password!=null">
+                admin_password = #{admin_password},
+            </if>
+
+        </set>
+        where admin_id = #{admin_id}
+    </update>
+
+    <delete id="deleteAdmin">
+        delete from admin where admin_id = #{admin_id}
+    </delete>
+
+
+</mapper>

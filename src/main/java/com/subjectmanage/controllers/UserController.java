@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
+import java.util.Enumeration;
 
 @Controller
 public class UserController {
@@ -61,6 +62,10 @@ public class UserController {
     @RequestMapping("/logout")
     public String logout(HttpSession session){
         session.removeAttribute("loginUser");
+        Enumeration em = session.getAttributeNames();  //得到session中所有的属性名
+        while (em.hasMoreElements()) {
+            session.removeAttribute(em.nextElement().toString()); //遍历删除session中的值
+        }
         return "redirect:/login/toLogin";
     }
 

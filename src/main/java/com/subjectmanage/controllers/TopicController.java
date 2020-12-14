@@ -1,6 +1,7 @@
 package com.subjectmanage.controllers;
 
 
+import com.alipay.api.domain.StudentInfo;
 import com.subjectmanage.beans.*;
 import com.subjectmanage.services.*;
 import com.subjectmanage.utils.LayuiTableData;
@@ -44,6 +45,9 @@ public class TopicController {
 
     @Autowired
     private FileServiceImpl fileService;
+
+    @Autowired
+    private IMailService mailService;
 
     @RequestMapping("/teach/toTopicList")
     public String toteachTopicList(){
@@ -460,12 +464,21 @@ public class TopicController {
     public Map<String,Object> checkgroup(@RequestParam int group_id, HttpSession session){
         Teacher loginUser = (Teacher)session.getAttribute("loginUser");
         Group group = groupService.getGroupById(group_id);
+        List<Student> studentList = group.getStudentList();
         Map<String,Object> map = new HashMap<>();
         if(group.getCurrent_numbers()==0){
             map.put("result","failed");
             return map;
         }
-        group.setStatus(1);
+        group.setStatus(1);//修改状态为确认
+
+        //发送邮件提醒学生
+        for (Student student : studentList) {
+            mailService.sendSimpleMail(student.getStudent_email(),"主题：你的综合设计课程小组已被老师确认",
+                    "你选择的综合设计课程小组已被老师确认，请前往系统查看！");
+        }
+
+
         groupService.updateGroup(group);
         map.put("result","success");
         return map;

@@ -6,10 +6,7 @@ import com.subjectmanage.beans.Student;
 import com.subjectmanage.beans.Topic;
 import com.subjectmanage.mapper.GroupMapper;
 import com.subjectmanage.mapper.TopicMapper;
-import com.subjectmanage.services.GroupServiceImpl;
-import com.subjectmanage.services.StudentServiceImpl;
-import com.subjectmanage.services.TopicService;
-import com.subjectmanage.services.TopicServiceImpl;
+import com.subjectmanage.services.*;
 import com.subjectmanage.utils.LayuiTableData;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,10 +26,12 @@ import java.util.*;
 
     @Resource
     private GroupServiceImpl groupService;
+
+    @Resource
+    private IMailServiceImpl mailService;
     @Test
     void topicTest1() {
-       List<Group> groups = groupService.selectTeaGroup(0,1,0,10);
-        System.out.println(groups);
+      mailService.sendSimpleMail("895042926@qq.com","测试","测试");
     }
 
     @Test
