@@ -168,7 +168,7 @@ public class AdminLoginController {
         Map<String,Object>hInfo=new HashMap<>();
         hInfo.put("title","文档管理");
         hInfo.put("icon","fa fa-window-maximize");
-        hInfo.put("href","");
+        hInfo.put("href","/admin/file/toFileList");
         childInfo.add(hInfo);
 
             Map<String,Object>cInfo=new HashMap<>();

@@ -42,6 +42,14 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public int deleteFile(int file_id) {
+        String path = System.getProperty("user.dir");
+        String realPath = path + "\\src\\main\\resources\\static";
+
+            File file = fileMapper.getFileById(file_id);
+            String url = realPath+file.getFile_url();
+            java.io.File deleteFile = new java.io.File(url);
+            deleteFile.delete();
+
         return fileMapper.deleteFile(file_id);
     }
 
@@ -162,6 +170,7 @@ public class FileServiceImpl implements FileService {
                         if(topic.getFile_id()!=0){
                             String url = realPath+fileMapper.getFileById(topic.getFile_id()).getFile_url();
                             java.io.File deleteFile = new java.io.File(url);
+                            deleteFile.delete();
                             fileMapper.deleteFile(topic.getFile_id());
                         }
                         topic.setFile_id(file1.getFile_id());
@@ -242,5 +251,36 @@ public class FileServiceImpl implements FileService {
             }
         }
         return false;
+    }
+
+    public List<File> getFileList(int startIndex, int pageSize){
+        return fileMapper.getFileList(startIndex,pageSize);
+    }
+
+    public int getFileListTotal(){
+        return fileMapper.getFileListTotal();
+    }
+
+    public int batchdeleteFile(int[] file_ids){
+        String path = System.getProperty("user.dir");
+        String realPath = path + "\\src\\main\\resources\\static";
+
+        for (int file_id : file_ids) {
+            File file = fileMapper.getFileById(file_id);
+            String url = realPath+file.getFile_url();
+            java.io.File deleteFile = new java.io.File(url);
+            deleteFile.delete();
+        }
+        return fileMapper.batchdeleteFile(file_ids);
+    }
+
+    @Override
+    public List<File> searchFile(String headline, Integer topic_id, Integer group_id, String release_time, String type,int startIndex, int pageSize) {
+        return fileMapper.searchFile(headline, topic_id, group_id, release_time, type,startIndex,pageSize);
+    }
+
+    @Override
+    public int searchFileTotal(String headline, Integer topic_id, Integer group_id, String release_time, String type) {
+        return fileMapper.searchFileTotal(headline, topic_id, group_id, release_time, type);
     }
 }

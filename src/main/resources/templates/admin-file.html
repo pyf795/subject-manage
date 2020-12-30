@@ -1,0 +1,235 @@
+<div class="layuimini-container layuimini-page-anim">
+    <div class="layuimini-main">
+
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">文档标题</label>
+                            <div class="layui-input-inline">
+                                <input id="headline" type="text" name="headline" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">小组id</label>
+                            <div class="layui-input-inline">
+                                <input id="group_id" type="text" name="group_id" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">课题id</label>
+                            <div class="layui-input-inline">
+                                <input id="topic_id" type="text" name="topic_id" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">上传日期</label>
+                            <div class="layui-input-inline">
+                                <input type="date" id="release_time" name="release_time" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">文档类型</label>
+                            <div class="layui-input-inline">
+                                <select id="type" name="type" >
+                                    <option value="unselect">--可选择--</option>
+                                    <option value="m">中期文档</option>
+                                    <option value="e">期末文档</option>
+                                    <option value="mission">课题任务书</option>
+                                    <option value="score">评分表</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <div class="layui-btn layui-btn-primary" id="search"><i class="layui-icon"></i> 搜 索</div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除文件 </button>
+            </div>
+        </script>
+
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+
+        <script type="text/html" id="currentTableBar">
+            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="download">下载文档</a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
+        </script>
+
+    </div>
+</div>
+
+<script>
+    layui.use(['form', 'table','miniPage','element'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table,
+            miniPage = layui.miniPage;
+
+        table.render({
+            elem: '#currentTableId',
+            url: '/admin/file/getFileList',
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter', 'exports', 'print', {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            cols: [
+                [
+                {type: "checkbox", width: 50},
+                {field: 'file_id', width: 80, title: 'ID', sort: true},
+                {field: 'group_id', width: 80, title: '小组id'},
+                {field: 'topic_id', width: 80, title: '课题id'},
+                {field: 'headline', width: 200, title: '标题'},
+                {field: 'release_time', width: 200, title: '上传日期'},
+                {field: 'type', width: 200, title: '文档类型',templet: function (file) {
+                        if(file.type ==="mission"){
+                            return "课题任务书";
+                        }else if(file.type ==="e"){
+                            return "期末文档";
+                        }else if(file.type ==="m"){
+                            return "期中文档";
+                        }else if(file.type ==="score"){
+                            return "评分表";
+                        }
+                }},
+                {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
+                ]
+            ],
+            limits: [5, 10, 20, 25, 50, 100],
+            limit: 5,
+            page: true,
+            skin: 'line'
+        });
+
+
+
+        /**
+         * toolbar事件监听
+         */
+        table.on('toolbar(currentTableFilter)', function (obj) {
+            if (obj.event === 'delete') {  // 监听删除操作
+                var checkStatus = table.checkStatus('currentTableId')
+                    , data = checkStatus.data;
+
+                var file_ids = [];
+                data.forEach(function (n,i) {
+                    file_ids.push(n.file_id);
+                });
+
+
+                layer.confirm('确定删除?', function (index) {
+
+                    //调用ajax删除
+                    $.ajax({
+                        url: "/admin/file/batchdeleteFile",
+                        type: "post",
+                        async:false,
+                        data:JSON.stringify(file_ids),
+                        // 定义发送请求的数据格式为JSON字符串
+                        contentType: "application/json;charset=UTF-8",
+                        //定义回调响应的数据格式为 JSON 字符串,该属性可以省略
+                        dataType: "json",
+                        //成功响应的结果
+                        success: function (data) {
+
+                            if(data.result ==="success"){
+                                layer.msg("删除成功！");
+                                location.reload();
+                            }
+                            else {
+                                layer.msg("删除失败！");
+                            }
+
+                        },
+                        error: function(e) {
+                            var res = $.parseJSON(e.responseText);
+                            layer.msg(res.msg);
+                        }
+                    });
+                    layer.close(index);
+                });
+            }
+        });
+
+        //监听表格复选框选择
+        table.on('checkbox(currentTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+        table.on('tool(currentTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'download') {
+
+                window.location.href="/admin/file/download?file_id="+data.file_id;
+
+            } else if (obj.event === 'delete') {
+
+                layer.confirm('确定删除?', function (index) {
+
+                    //调用ajax删除
+                    $.ajax({
+                        url: "/admin/file/deleteFile?file_id="+data.file_id,
+                        type: "post",
+                        async:false,
+                        // 定义发送请求的数据格式为JSON字符串
+                        contentType: "application/json;charset=UTF-8",
+                        //定义回调响应的数据格式为 JSON 字符串,该属性可以省略
+                        dataType: "json",
+                        //成功响应的结果
+                        success: function (data) {
+
+                            if(data.result ==="success"){
+                                obj.del();
+                                layer.msg("删除成功！");
+                            }
+                            else {
+                                layer.msg("删除失败！");
+                            }
+
+                        },
+                        error: function(e) {
+                            var res = $.parseJSON(e.responseText);
+                            layer.msg(res.msg);
+                        }
+                    });
+                    layer.close(index);
+                });
+            }
+        });
+
+        $('#search').on('click', function() {
+            var headline = document.getElementById("headline").value;
+            var release_time = document.getElementById("release_time").value;
+            var group_id = document.getElementById("group_id").value;
+            var topic_id = document.getElementById("topic_id").value;
+            var type = document.getElementById("type").value;
+            if(release_time===""){
+                document.getElementById("release_time").value=null;
+            }
+            //执行搜索重载
+            table.reload('currentTableId', {
+                url:'/admin/file/searchFile',
+                method:'post',
+                page: {
+                    curr: 1
+                },
+                where: {
+                    headline : headline,
+                    release_time : release_time,
+                    group_id : group_id,
+                    topic_id : topic_id,
+                    type : type
+                }
+            },'data');
+        });
+    });
+</script>
