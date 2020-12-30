@@ -290,10 +290,10 @@ public class TopicController {
         Topic topic = topicService.getTopicWithGroupById(topic_id);
         Map<String,Object> map = new HashMap<>();
         if(topic.getGroupList().size()>0){
-            i = topicService.deleteTopic(topic_id);
-            map.put("result","success");
-        }else{
             map.put("result","failed");
+        }else{
+             i = topicService.deleteTopic(topic_id);
+            map.put("result","success");
         }
         return map;
     }

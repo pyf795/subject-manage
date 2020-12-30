@@ -131,13 +131,13 @@ public class AdminLoginController {
             Map<String,Object>aInfo=new HashMap<>();
             aInfo.put("title","个人信息修改");
             aInfo.put("icon","fa fa-home");
-            aInfo.put("href","");
+            aInfo.put("href","/admin/userDetails");
             childInfo.add(aInfo);
 
             Map<String,Object>bInfo=new HashMap<>();
             bInfo.put("title","课题管理");
             bInfo.put("icon","fa fa-window-maximize");
-            bInfo.put("href","");
+            bInfo.put("href","/admin/topic/toTopicList");
             childInfo.add(bInfo);
 
             Map<String,Object>dInfo=new HashMap<>();
@@ -149,7 +149,7 @@ public class AdminLoginController {
             Map<String,Object>eInfo=new HashMap<>();
             eInfo.put("title","成绩管理");
             eInfo.put("icon","fa fa-window-maximize");
-            eInfo.put("href","");
+            eInfo.put("href","/admin/topic/scores");
             childInfo.add(eInfo);
 
 
@@ -164,6 +164,12 @@ public class AdminLoginController {
         gInfo.put("icon","fa fa-window-maximize");
         gInfo.put("href","/admin/news/toNewsList");
         childInfo.add(gInfo);
+
+        Map<String,Object>hInfo=new HashMap<>();
+        hInfo.put("title","文档管理");
+        hInfo.put("icon","fa fa-window-maximize");
+        hInfo.put("href","");
+        childInfo.add(hInfo);
 
             Map<String,Object>cInfo=new HashMap<>();
             cInfo.put("title","欢迎你");

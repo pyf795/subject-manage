@@ -12,7 +12,9 @@ public interface ScoreService {
 
     public Score getScore(int group_id,int student_id);
 
-    public Score selectAll(int startIndex,int pageSize);
+    public List<Score> selectAll(int startIndex,int pageSize);
+
+    public int selectAllTotal();
 
     public int getTotal(int student_id);
 

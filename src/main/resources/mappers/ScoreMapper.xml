@@ -19,7 +19,11 @@
 
 
     <select id="selectAll"  resultMap="ScoreInfo">
-        select * from topic limit #{startIndex},#{pageSize}
+        select * from score limit #{startIndex},#{pageSize}
+    </select>
+
+    <select id="selectAllTotal"  resultType="int">
+        select count(*) from score
     </select>
 
     <resultMap id="ScoreInfo" type="com.subjectmanage.beans.Score">

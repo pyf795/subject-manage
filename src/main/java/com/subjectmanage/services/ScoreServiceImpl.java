@@ -30,8 +30,13 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     @Override
-    public Score selectAll(int startIndex, int pageSize) {
+    public List<Score> selectAll(int startIndex, int pageSize) {
         return scoreMapper.selectAll(startIndex,pageSize);
+    }
+
+    @Override
+    public int selectAllTotal() {
+        return scoreMapper.selectAllTotal();
     }
 
     @Override
